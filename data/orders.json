@@ -1,0 +1,47 @@
+[
+  {
+    "id": "DD20260619001",
+    "createdAt": "2026-06-19 10:12",
+    "customerName": "张晨曦",
+    "customerPhone": "138****8271",
+    "productCode": "PRD-1001",
+    "productName": "企业收款云终端",
+    "amount": 2680
+  },
+  {
+    "id": "DD20260619002",
+    "createdAt": "2026-06-19 10:46",
+    "customerName": "王雅宁",
+    "customerPhone": "139****5520",
+    "productCode": "PRD-1002",
+    "productName": "智慧对账服务包",
+    "amount": 1299
+  },
+  {
+    "id": "DD20260619003",
+    "createdAt": "2026-06-19 11:20",
+    "customerName": "陈柏舟",
+    "customerPhone": "186****4421",
+    "productCode": "PRD-1004",
+    "productName": "商户经营分析看板",
+    "amount": 1999
+  },
+  {
+    "id": "DD20260619004",
+    "createdAt": "2026-06-19 14:05",
+    "customerName": "刘思彤",
+    "customerPhone": "137****1638",
+    "productCode": "PRD-1003",
+    "productName": "企业资金监管组件",
+    "amount": 4580
+  },
+  {
+    "id": "DD20260619005",
+    "createdAt": "2026-06-19 15:18",
+    "customerName": "许景禾",
+    "customerPhone": "158****9044",
+    "productCode": "PRD-1006",
+    "productName": "企业客户营销引擎",
+    "amount": 3250
+  }
+]

@@ -1,0 +1,1199 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>账号管理 - 邮储文询客智中枢</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: "#f4fcf7",
+              100: "#e6f8ed",
+              200: "#caeed9",
+              300: "#a6dfbf",
+              400: "#7fcd9f",
+              500: "#58b67e",
+              600: "#3f9f68",
+              700: "#338353",
+              800: "#2f6c47",
+              900: "#28563a"
+            }
+          },
+          boxShadow: {
+            soft: "0 6px 18px rgba(63, 159, 104, 0.07)",
+            panel: "0 3px 10px rgba(63, 159, 104, 0.05)"
+          },
+          backgroundImage: {
+            "hero-glow": "linear-gradient(180deg, rgba(88,182,126,0.08) 0%, rgba(255,255,255,0) 24%)"
+          }
+        }
+      }
+    };
+  </script>
+  <script src="./auth.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      font-family: "Inter", "PingFang SC", "Microsoft YaHei", sans-serif;
+    }
+
+    .glass {
+      background: #ffffff;
+      border: 1px solid #e1eee6;
+    }
+
+    .modal-open {
+      overflow: hidden;
+    }
+
+    .bank-divider {
+      position: relative;
+      padding-left: 14px;
+    }
+
+    .bank-divider::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 4px;
+      height: 18px;
+      border-radius: 999px;
+      background: #58b67e;
+    }
+
+    .drawer-panel {
+      transform: translateX(100%);
+      transition: transform 220ms ease;
+    }
+
+    .drawer-panel.open {
+      transform: translateX(0);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        scroll-behavior: auto !important;
+        transition: none !important;
+      }
+    }
+  </style>
+</head>
+<body class="min-h-screen bg-[#fbfefd] bg-hero-glow text-slate-800">
+  <div class="flex min-h-screen">
+    <aside class="flex w-full max-w-[272px] flex-col border-r border-[#d8e9de] bg-[#f7faf8] px-5 py-6 text-slate-800">
+      <div class="mb-10 flex items-center gap-3">
+        <div class="flex h-[52px] w-[52px] items-center justify-center rounded-2xl border border-slate-200 bg-white shadow-panel">
+          <img
+            src="file:///C:/Users/123/.cursor/projects/f-CRM/assets/c__Users_123_AppData_Roaming_Cursor_User_workspaceStorage_empty-window_images_fW2Zi8ZvH-0bd9f079-3bf4-4ba7-ba15-c678011f227c.png"
+            alt="中国邮政储蓄银行标志"
+            class="h-[35px] w-[35px] object-contain"
+          />
+        </div>
+        <div class="min-w-0">
+          <p class="text-xs uppercase tracking-[0.28em] text-brand-500/70">i-QCustAgent</p>
+          <h1 class="mt-1 text-lg font-semibold tracking-wide text-slate-900">邮储文询客智中枢</h1>
+        </div>
+      </div>
+
+      <div class="mb-6 rounded-2xl border border-brand-100 bg-gradient-to-r from-brand-50 to-white p-4">
+        <p class="text-sm text-brand-600">账号治理概览</p>
+        <div class="mt-3 flex items-end justify-between">
+          <div>
+            <p id="sideAccountCount" class="text-3xl font-semibold text-slate-900">0</p>
+            <p id="sideAccountHint" class="mt-1 text-xs text-slate-500">管理员账号 0 个</p>
+          </div>
+          <span class="rounded-full border border-brand-100 bg-white px-3 py-1 text-xs font-medium text-brand-600">正常</span>
+        </div>
+      </div>
+
+      <nav class="space-y-2">
+        <a href="dashboard.html" class="flex cursor-pointer items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-slate-700 transition-colors duration-200 hover:bg-brand-50 hover:text-brand-700">
+          <svg class="h-5 w-5 text-brand-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 19h16M7 16V9m5 7V5m5 11v-6" />
+          </svg>
+          数据仪表盘
+        </a>
+        <a href="crm-leads.html" class="flex cursor-pointer items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-slate-700 transition-colors duration-200 hover:bg-brand-50 hover:text-brand-700">
+          <svg class="h-5 w-5 text-brand-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 7h16M4 12h10M4 17h7" />
+          </svg>
+          线索管理
+        </a>
+        <a href="product-management.html" class="flex cursor-pointer items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-slate-700 transition-colors duration-200 hover:bg-brand-50 hover:text-brand-700">
+          <svg class="h-5 w-5 text-brand-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 7.5h16M6 4h12a2 2 0 0 1 2 2v12.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 18.5V6a2 2 0 0 1 2-2Zm1 7h4m-4 4h7" />
+          </svg>
+          商品管理
+        </a>
+        <a href="order-management.html" class="flex cursor-pointer items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-slate-700 transition-colors duration-200 hover:bg-brand-50 hover:text-brand-700">
+          <svg class="h-5 w-5 text-brand-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M5 6.5h14M7 4h10a2 2 0 0 1 2 2v11.5A1.5 1.5 0 0 1 17.5 19h-11A1.5 1.5 0 0 1 5 17.5V6a2 2 0 0 1 2-2Zm1 6h8m-8 4h5" />
+          </svg>
+          订单管理
+        </a>
+        <a href="role-management.html" class="flex cursor-pointer items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-slate-700 transition-colors duration-200 hover:bg-brand-50 hover:text-brand-700">
+          <svg class="h-5 w-5 text-brand-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M7 8h10M7 12h10M7 16h6M5 4h14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Z" />
+          </svg>
+          角色与权限管理
+        </a>
+        <a href="customer-management.html" class="flex cursor-pointer items-center gap-3 rounded-xl border border-brand-100 bg-brand-500 px-4 py-3 text-sm font-semibold text-white shadow-panel transition-colors duration-200">
+          <svg class="h-5 w-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 7h12M6 12h12M6 17h7M5 4h14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Zm2 0v16" />
+          </svg>
+          账号管理
+        </a>
+      </nav>
+
+      <div class="mt-10 rounded-2xl border border-slate-200 bg-white p-4 shadow-panel">
+        <p class="text-sm font-medium text-slate-900">账号管理提醒</p>
+        <p class="mt-2 text-sm leading-6 text-slate-500">建议及时清理无效账号，并定期重置高权限账号密码，降低账号安全风险。</p>
+      </div>
+
+      <button id="openUserCenterButton" type="button" class="mt-auto flex w-full items-center gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-4 text-left shadow-panel transition-colors duration-200 hover:bg-brand-50">
+        <img id="userCenterAvatar" alt="默认头像" class="h-12 w-12 rounded-2xl border border-slate-200 object-cover" />
+        <div class="min-w-0">
+          <p class="text-xs uppercase tracking-[0.2em] text-slate-400">用户中心</p>
+          <p id="userCenterName" class="mt-1 truncate text-sm font-semibold text-slate-900">当前用户</p>
+        </div>
+      </button>
+    </aside>
+
+    <main class="flex-1 p-6 lg:p-7">
+      <div class="mx-auto max-w-7xl space-y-6">
+        <header class="glass overflow-hidden rounded-2xl p-6 shadow-soft">
+          <div class="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
+            <div>
+              <p class="text-sm font-medium text-brand-600">账号管理</p>
+              <h2 class="mt-2 text-3xl font-semibold tracking-tight text-slate-900">统一维护系统账号信息与所属角色</h2>
+              <p class="mt-3 max-w-3xl text-sm leading-6 text-slate-600">页面样式和交互结构参考线索管理，支持账号筛选、新增账号、右侧抽屉修改、重置密码和删除确认。</p>
+            </div>
+            <div class="grid grid-cols-2 gap-3 sm:grid-cols-3">
+              <div class="rounded-xl border border-slate-200 bg-[#fbfefb] px-4 py-3 shadow-panel">
+                <p class="text-xs text-slate-500">账号总数</p>
+                <p id="heroAccountCount" class="mt-1 text-xl font-semibold text-slate-900">0</p>
+              </div>
+              <div class="rounded-xl border border-slate-200 bg-[#fbfefb] px-4 py-3 shadow-panel">
+                <p class="text-xs text-slate-500">管理员账号</p>
+                <p id="heroAdminCount" class="mt-1 text-xl font-semibold text-brand-600">0</p>
+              </div>
+              <div class="col-span-2 rounded-xl border border-slate-200 bg-[#fbfefb] px-4 py-3 shadow-panel sm:col-span-1">
+                <p class="text-xs text-slate-500">关联角色数</p>
+                <p id="heroRoleCount" class="mt-1 text-xl font-semibold text-brand-600">0</p>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <section class="glass rounded-2xl p-6 shadow-soft">
+          <div class="flex flex-col gap-4 border-b border-slate-200 pb-5 lg:flex-row lg:items-start lg:justify-between">
+            <div>
+              <h3 class="bank-divider text-lg font-semibold text-slate-900">筛选条件</h3>
+              <p class="mt-1 text-sm text-slate-500">支持按账号创建时间、手机号、用户姓名和所属角色快速筛选目标账号。</p>
+            </div>
+            <button id="openAddAccountButton" type="button" class="inline-flex cursor-pointer items-center justify-center gap-2 rounded-xl bg-brand-500 px-5 py-3 text-sm font-semibold text-white shadow-panel transition-colors duration-200 hover:bg-brand-600 focus:outline-none focus:ring-4 focus:ring-brand-100">
+              <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 5v14m7-7H5" />
+              </svg>
+              新增账号
+            </button>
+          </div>
+
+          <form id="filterForm" class="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-5">
+            <label class="block">
+              <span class="mb-2 block text-sm font-medium text-slate-700">账号创建时间</span>
+              <input id="filterDate" type="date" class="w-full rounded-xl border border-slate-300 bg-[#fcfffd] px-4 py-3 text-sm text-slate-900 outline-none transition-colors duration-200 focus:border-brand-400 focus:bg-white focus:ring-4 focus:ring-brand-50" />
+            </label>
+
+            <label class="block">
+              <span class="mb-2 block text-sm font-medium text-slate-700">手机号</span>
+              <input id="filterPhone" type="text" placeholder="请输入手机号" class="w-full rounded-xl border border-slate-300 bg-[#fcfffd] px-4 py-3 text-sm text-slate-900 outline-none transition-colors duration-200 placeholder:text-slate-400 focus:border-brand-400 focus:bg-white focus:ring-4 focus:ring-brand-50" />
+            </label>
+
+            <label class="block">
+              <span class="mb-2 block text-sm font-medium text-slate-700">用户姓名</span>
+              <input id="filterUserName" type="text" placeholder="请输入用户姓名" class="w-full rounded-xl border border-slate-300 bg-[#fcfffd] px-4 py-3 text-sm text-slate-900 outline-none transition-colors duration-200 placeholder:text-slate-400 focus:border-brand-400 focus:bg-white focus:ring-4 focus:ring-brand-50" />
+            </label>
+
+            <label class="block">
+              <span class="mb-2 block text-sm font-medium text-slate-700">所属角色</span>
+              <div class="relative">
+                <select id="filterRoleName" class="w-full appearance-none rounded-xl border border-slate-300 bg-[#fcfffd] px-4 py-3 pr-10 text-sm text-slate-900 outline-none transition-colors duration-200 focus:border-brand-400 focus:bg-white focus:ring-4 focus:ring-brand-50">
+                  <option value="全部">全部</option>
+                </select>
+                <svg class="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="m6 8 4 4 4-4" />
+                </svg>
+              </div>
+            </label>
+
+            <div class="flex items-end">
+              <button id="queryButton" type="submit" class="w-full cursor-pointer rounded-xl bg-brand-500 px-5 py-3 text-sm font-medium text-white transition-colors duration-200 hover:bg-brand-600">查询</button>
+            </div>
+          </form>
+        </section>
+
+        <section class="glass rounded-2xl shadow-soft">
+          <div class="flex flex-col gap-3 border-b border-slate-200 px-6 py-5 lg:flex-row lg:items-center lg:justify-between">
+            <div>
+              <h3 class="bank-divider text-lg font-semibold text-slate-900">账号列表</h3>
+              <p class="mt-1 text-sm text-slate-500">展示账号创建时间、手机号、用户姓名及所属角色。</p>
+            </div>
+            <div class="flex flex-wrap items-center gap-2">
+              <span id="filteredBadge" class="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-semibold text-slate-600">搜索结果共 0 条</span>
+            </div>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="min-w-full border-separate border-spacing-0">
+              <thead>
+                <tr class="bg-[#edf7f1] text-center">
+                  <th class="whitespace-nowrap px-6 py-4 text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">账号创建时间</th>
+                  <th class="whitespace-nowrap px-6 py-4 text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">手机号</th>
+                  <th class="whitespace-nowrap px-6 py-4 text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">用户姓名</th>
+                  <th class="whitespace-nowrap px-6 py-4 text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">所属角色</th>
+                  <th class="whitespace-nowrap px-6 py-4 text-center text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">操作</th>
+                </tr>
+              </thead>
+              <tbody id="accountTableBody" class="bg-white"></tbody>
+            </table>
+          </div>
+
+          <div class="flex flex-col gap-4 px-6 py-5 sm:flex-row sm:items-center sm:justify-between">
+            <p id="tableSummary" class="text-sm text-slate-500">共 0 条账号，当前展示 0 条</p>
+            <div class="flex items-center gap-2">
+              <button id="prevPageButton" type="button" class="cursor-pointer rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition-colors duration-200 hover:bg-slate-50 disabled:cursor-not-allowed disabled:border-slate-100 disabled:bg-slate-50 disabled:text-slate-400">上一页</button>
+              <span id="pageIndicator" class="rounded-xl bg-brand-500 px-4 py-2 text-sm font-medium text-white">第 1 / 1 页</span>
+              <button id="nextPageButton" type="button" class="cursor-pointer rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition-colors duration-200 hover:bg-slate-50 disabled:cursor-not-allowed disabled:border-slate-100 disabled:bg-slate-50 disabled:text-slate-400">下一页</button>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <div id="addAccountModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-950/45 px-4">
+    <div class="w-full max-w-2xl rounded-2xl border border-slate-200 bg-white p-6 shadow-soft">
+      <div class="flex items-start justify-between gap-4">
+        <div>
+          <p class="text-sm font-medium text-brand-600">新增</p>
+          <h3 class="mt-1 text-2xl font-semibold text-slate-900">新增系统账号</h3>
+          <p class="mt-2 text-sm text-slate-500">系统使用手机号作为账号，新增后默认密码为 123123。</p>
+        </div>
+        <button id="closeAddAccountButton" type="button" class="cursor-pointer rounded-2xl border border-slate-200 p-3 text-slate-500 transition-colors duration-200 hover:bg-slate-50 hover:text-slate-700" aria-label="关闭新增弹窗">
+          <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 6l12 12M18 6L6 18" />
+          </svg>
+        </button>
+      </div>
+
+      <form id="addAccountForm" class="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2">
+        <label class="block">
+          <span class="mb-2 block text-sm font-medium text-slate-700">手机号</span>
+          <input id="addPhone" type="text" required placeholder="请输入手机号" class="w-full rounded-xl border border-slate-300 bg-[#fcfffd] px-4 py-3 text-sm text-slate-900 outline-none transition-colors duration-200 placeholder:text-slate-400 focus:border-brand-400 focus:bg-white focus:ring-4 focus:ring-brand-50" />
+        </label>
+        <label class="block">
+          <span class="mb-2 block text-sm font-medium text-slate-700">用户姓名</span>
+          <input id="addUserName" type="text" required placeholder="请输入用户姓名" class="w-full rounded-xl border border-slate-300 bg-[#fcfffd] px-4 py-3 text-sm text-slate-900 outline-none transition-colors duration-200 placeholder:text-slate-400 focus:border-brand-400 focus:bg-white focus:ring-4 focus:ring-brand-50" />
+        </label>
+        <label class="block md:col-span-2">
+          <span class="mb-2 block text-sm font-medium text-slate-700">所属角色</span>
+          <div class="relative">
+            <select id="addRoleName" required class="w-full appearance-none rounded-xl border border-slate-300 bg-[#fcfffd] px-4 py-3 pr-10 text-sm text-slate-900 outline-none transition-colors duration-200 focus:border-brand-400 focus:bg-white focus:ring-4 focus:ring-brand-50"></select>
+            <svg class="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" d="m6 8 4 4 4-4" />
+            </svg>
+          </div>
+        </label>
+      </form>
+
+      <div class="mt-6 flex flex-wrap justify-end gap-3">
+        <button id="cancelAddAccountButton" type="button" class="cursor-pointer rounded-xl border border-slate-300 bg-white px-5 py-3 text-sm font-medium text-slate-700 transition-colors duration-200 hover:bg-slate-50">取消</button>
+        <button type="submit" form="addAccountForm" class="cursor-pointer rounded-xl bg-brand-500 px-5 py-3 text-sm font-semibold text-white shadow-panel transition-colors duration-200 hover:bg-brand-600">添加</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="editDrawer" class="fixed inset-0 z-50 hidden bg-slate-950/45">
+    <div id="editDrawerPanel" class="drawer-panel ml-auto flex h-full w-full max-w-2xl flex-col bg-white shadow-2xl">
+      <div class="border-b border-slate-200 px-6 py-5">
+        <div class="flex items-start justify-between gap-4">
+          <div>
+            <p class="text-sm font-medium text-brand-600">修改</p>
+            <h3 class="mt-1 text-2xl font-semibold text-slate-900">修改账号信息</h3>
+            <p class="mt-2 text-sm text-slate-500">当前抽屉仅支持修改手机号和用户姓名，所属角色保持不变。</p>
+          </div>
+          <button id="closeEditDrawerButton" type="button" class="cursor-pointer rounded-2xl border border-slate-200 p-3 text-slate-500 transition-colors duration-200 hover:bg-slate-50 hover:text-slate-700" aria-label="关闭修改抽屉">
+            <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M6 6l12 12M18 6L6 18" />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <form id="editAccountForm" class="flex-1 overflow-y-auto px-6 py-6">
+        <div class="grid grid-cols-1 gap-4">
+          <label class="block">
+            <span class="mb-2 block text-sm font-medium text-slate-700">账号创建时间</span>
+            <input id="editCreatedAt" type="text" readonly class="w-full cursor-not-allowed rounded-xl border border-slate-300 bg-[#f2f8f4] px-4 py-3 text-sm text-slate-500 outline-none" />
+          </label>
+          <label class="block">
+            <span class="mb-2 block text-sm font-medium text-slate-700">所属角色</span>
+            <input id="editRoleName" type="text" readonly class="w-full cursor-not-allowed rounded-xl border border-slate-300 bg-[#f2f8f4] px-4 py-3 text-sm text-slate-500 outline-none" />
+          </label>
+          <label class="block">
+            <span class="mb-2 block text-sm font-medium text-slate-700">手机号</span>
+            <input id="editPhone" type="text" required placeholder="请输入手机号" class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition-colors duration-200 placeholder:text-slate-400 focus:border-brand-400 focus:ring-4 focus:ring-brand-100" />
+          </label>
+          <label class="block">
+            <span class="mb-2 block text-sm font-medium text-slate-700">用户姓名</span>
+            <input id="editUserName" type="text" required placeholder="请输入用户姓名" class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition-colors duration-200 placeholder:text-slate-400 focus:border-brand-400 focus:ring-4 focus:ring-brand-100" />
+          </label>
+        </div>
+      </form>
+
+      <div class="border-t border-slate-200 px-6 py-5">
+        <div class="flex flex-wrap justify-end gap-3">
+          <button id="cancelEditDrawerButton" type="button" class="cursor-pointer rounded-xl border border-slate-300 bg-white px-5 py-3 text-sm font-medium text-slate-700 transition-colors duration-200 hover:bg-slate-50">取消</button>
+          <button type="submit" form="editAccountForm" class="cursor-pointer rounded-xl bg-brand-500 px-5 py-3 text-sm font-semibold text-white shadow-panel transition-colors duration-200 hover:bg-brand-600">保存修改</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="resetPasswordModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-950/45 px-4">
+    <div class="w-full max-w-lg rounded-2xl border border-slate-200 bg-white p-6 shadow-soft">
+      <div class="flex items-start justify-between gap-4">
+        <div>
+          <p class="text-sm font-medium text-amber-500">密码重置确认</p>
+          <h3 class="mt-1 text-2xl font-semibold text-slate-900">确认重置当前账号密码？</h3>
+          <p id="resetPasswordDescription" class="mt-2 text-sm text-slate-500">确认后密码将重置为默认值 123456。</p>
+        </div>
+        <button id="closeResetPasswordButton" type="button" class="cursor-pointer rounded-2xl border border-slate-200 p-3 text-slate-500 transition-colors duration-200 hover:bg-slate-50 hover:text-slate-700" aria-label="关闭重置密码弹窗">
+          <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 6l12 12M18 6L6 18" />
+          </svg>
+        </button>
+      </div>
+
+      <div class="mt-6 flex flex-wrap justify-end gap-3">
+        <button id="cancelResetPasswordButton" type="button" class="cursor-pointer rounded-xl border border-slate-300 bg-white px-5 py-3 text-sm font-medium text-slate-700 transition-colors duration-200 hover:bg-slate-50">取消</button>
+        <button id="confirmResetPasswordButton" type="button" class="cursor-pointer rounded-xl bg-amber-500 px-5 py-3 text-sm font-semibold text-white shadow-panel transition-colors duration-200 hover:bg-amber-600">确认重置</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="deleteAccountModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-950/45 px-4">
+    <div class="w-full max-w-lg rounded-2xl border border-slate-200 bg-white p-6 shadow-soft">
+      <div class="flex items-start justify-between gap-4">
+        <div>
+          <p class="text-sm font-medium text-rose-500">删除确认</p>
+          <h3 class="mt-1 text-2xl font-semibold text-slate-900">确认删除当前账号？</h3>
+          <p id="deleteAccountDescription" class="mt-2 text-sm text-slate-500">删除后该账号将从系统账号列表中移除。</p>
+        </div>
+        <button id="closeDeleteAccountButton" type="button" class="cursor-pointer rounded-2xl border border-slate-200 p-3 text-slate-500 transition-colors duration-200 hover:bg-slate-50 hover:text-slate-700" aria-label="关闭删除确认弹窗">
+          <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 6l12 12M18 6L6 18" />
+          </svg>
+        </button>
+      </div>
+
+      <div class="mt-6 flex flex-wrap justify-end gap-3">
+        <button id="cancelDeleteAccountButton" type="button" class="cursor-pointer rounded-xl border border-slate-300 bg-white px-5 py-3 text-sm font-medium text-slate-700 transition-colors duration-200 hover:bg-slate-50">取消</button>
+        <button id="confirmDeleteAccountButton" type="button" class="cursor-pointer rounded-xl bg-rose-500 px-5 py-3 text-sm font-semibold text-white shadow-panel transition-colors duration-200 hover:bg-rose-600">确认删除</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="userCenterModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-950/45 px-4">
+    <div class="w-full max-w-xl rounded-2xl border border-slate-200 bg-white p-6 shadow-soft">
+      <div class="flex items-start justify-between gap-4">
+        <div>
+          <p class="text-sm font-medium text-brand-600">用户信息</p>
+          <h3 class="mt-1 text-2xl font-semibold text-slate-900">查看当前登录用户资料</h3>
+          <p class="mt-2 text-sm text-slate-500">用户姓名和手机号来自账号管理数据，仅支持查看，不可直接修改。</p>
+        </div>
+        <button id="closeUserCenterButton" type="button" class="cursor-pointer rounded-2xl border border-slate-200 p-3 text-slate-500 transition-colors duration-200 hover:bg-slate-50 hover:text-slate-700" aria-label="关闭用户中心弹窗">
+          <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 6l12 12M18 6L6 18" />
+          </svg>
+        </button>
+      </div>
+
+      <div class="mt-6 rounded-3xl border border-slate-200 bg-[#f8fbf9] p-5">
+        <div class="flex items-center gap-4">
+          <img id="userProfileAvatar" alt="默认头像" class="h-20 w-20 rounded-3xl border border-slate-200 object-cover" />
+          <div class="space-y-2">
+            <div>
+              <p class="text-xs uppercase tracking-[0.2em] text-slate-400">用户姓名</p>
+              <p id="userProfileName" class="mt-1 text-lg font-semibold text-slate-900">-</p>
+            </div>
+            <div>
+              <p class="text-xs uppercase tracking-[0.2em] text-slate-400">手机号</p>
+              <p id="userProfilePhone" class="mt-1 text-sm text-slate-600">-</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-6 flex flex-wrap justify-end gap-3">
+        <button id="openChangePasswordButton" type="button" class="cursor-pointer rounded-xl border border-brand-200 bg-white px-5 py-3 text-sm font-medium text-brand-600 transition-colors duration-200 hover:bg-brand-50">修改密码</button>
+        <button id="openLogoutButton" type="button" class="cursor-pointer rounded-xl bg-rose-500 px-5 py-3 text-sm font-semibold text-white shadow-panel transition-colors duration-200 hover:bg-rose-600">退出登录</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="changePasswordModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-950/45 px-4">
+    <div class="w-full max-w-xl rounded-2xl border border-slate-200 bg-white p-6 shadow-soft">
+      <div class="flex items-start justify-between gap-4">
+        <div>
+          <p class="text-sm font-medium text-brand-600">修改密码</p>
+          <h3 class="mt-1 text-2xl font-semibold text-slate-900">更新当前登录账号密码</h3>
+          <p class="mt-2 text-sm text-slate-500">请输入原密码和新密码，确认后会同步写入账号管理数据。</p>
+        </div>
+        <button id="closeChangePasswordButton" type="button" class="cursor-pointer rounded-2xl border border-slate-200 p-3 text-slate-500 transition-colors duration-200 hover:bg-slate-50 hover:text-slate-700" aria-label="关闭修改密码弹窗">
+          <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 6l12 12M18 6L6 18" />
+          </svg>
+        </button>
+      </div>
+
+      <form id="changePasswordForm" class="mt-6 space-y-4">
+        <label class="block">
+          <span class="mb-2 block text-sm font-medium text-slate-700">原密码</span>
+          <input id="currentPassword" type="password" required placeholder="请输入原密码" class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition-colors duration-200 placeholder:text-slate-400 focus:border-brand-400 focus:ring-4 focus:ring-brand-100" />
+        </label>
+        <label class="block">
+          <span class="mb-2 block text-sm font-medium text-slate-700">新密码</span>
+          <input id="newPassword" type="password" required placeholder="请输入新密码" class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition-colors duration-200 placeholder:text-slate-400 focus:border-brand-400 focus:ring-4 focus:ring-brand-100" />
+        </label>
+        <label class="block">
+          <span class="mb-2 block text-sm font-medium text-slate-700">确认新密码</span>
+          <input id="confirmNewPassword" type="password" required placeholder="请再次输入新密码" class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition-colors duration-200 placeholder:text-slate-400 focus:border-brand-400 focus:ring-4 focus:ring-brand-100" />
+        </label>
+        <p id="changePasswordError" class="hidden rounded-xl border border-rose-100 bg-rose-50 px-4 py-3 text-sm text-rose-600"></p>
+      </form>
+
+      <div class="mt-6 flex flex-wrap justify-end gap-3">
+        <button id="cancelChangePasswordButton" type="button" class="cursor-pointer rounded-xl border border-slate-300 bg-white px-5 py-3 text-sm font-medium text-slate-700 transition-colors duration-200 hover:bg-slate-50">取消</button>
+        <button type="submit" form="changePasswordForm" class="cursor-pointer rounded-xl bg-brand-500 px-5 py-3 text-sm font-semibold text-white shadow-panel transition-colors duration-200 hover:bg-brand-600">提交</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="logoutConfirmModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-950/45 px-4">
+    <div class="w-full max-w-lg rounded-2xl border border-slate-200 bg-white p-6 shadow-soft">
+      <div class="flex items-start justify-between gap-4">
+        <div>
+          <p class="text-sm font-medium text-rose-500">确认退出</p>
+          <h3 class="mt-1 text-2xl font-semibold text-slate-900">确认退出当前登录状态？</h3>
+          <p class="mt-2 text-sm text-slate-500">确认后将清除当前登录状态并返回登录页。</p>
+        </div>
+        <button id="closeLogoutConfirmButton" type="button" class="cursor-pointer rounded-2xl border border-slate-200 p-3 text-slate-500 transition-colors duration-200 hover:bg-slate-50 hover:text-slate-700" aria-label="关闭退出确认弹窗">
+          <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 6l12 12M18 6L6 18" />
+          </svg>
+        </button>
+      </div>
+
+      <div class="mt-6 flex flex-wrap justify-end gap-3">
+        <button id="cancelLogoutConfirmButton" type="button" class="cursor-pointer rounded-xl border border-slate-300 bg-white px-5 py-3 text-sm font-medium text-slate-700 transition-colors duration-200 hover:bg-slate-50">取消</button>
+        <button id="confirmLogoutButton" type="button" class="cursor-pointer rounded-xl bg-rose-500 px-5 py-3 text-sm font-semibold text-white shadow-panel transition-colors duration-200 hover:bg-rose-600">确认退出</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    window.CRMAuth.requireAuth();
+    window.CRMAuth.applyNavigationPermissions();
+
+    const avatarDataUrl = "data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0%25' stop-color='%2358b67e'/%3E%3Cstop offset='100%25' stop-color='%233f7cf7'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='120' height='120' rx='32' fill='url(%23g)'/%3E%3Ccircle cx='60' cy='44' r='22' fill='rgba(255,255,255,0.92)'/%3E%3Cpath d='M24 100c6-20 22-31 36-31s30 11 36 31' fill='rgba(255,255,255,0.92)'/%3E%3C/svg%3E";
+    const accountStorageKey = "crm-account-management";
+    const roleStorageKey = "crm-role-permissions";
+    const pageSize = 5;
+    const defaultPassword = "123123";
+    const resetPasswordValue = "123456";
+
+    const embeddedAccounts = [
+      {
+        id: "ACC20260622001",
+        createdAt: "2026-06-22 09:20",
+        phone: "13912345678",
+        userName: "系统管理员",
+        roleName: "管理员",
+        password: "123123"
+      }
+    ];
+
+    const embeddedRoles = [
+      {
+        id: "ROLE20260622001",
+        roleName: "管理员"
+      }
+    ];
+
+    let accounts = [];
+    let filteredAccounts = [];
+    let roleOptions = [];
+    let activeAccountId = null;
+    let currentPage = 1;
+    let currentSession = window.CRMAuth.getSession();
+
+    const heroAccountCount = document.getElementById("heroAccountCount");
+    const heroAdminCount = document.getElementById("heroAdminCount");
+    const heroRoleCount = document.getElementById("heroRoleCount");
+    const sideAccountCount = document.getElementById("sideAccountCount");
+    const sideAccountHint = document.getElementById("sideAccountHint");
+    const filteredBadge = document.getElementById("filteredBadge");
+    const accountTableBody = document.getElementById("accountTableBody");
+    const tableSummary = document.getElementById("tableSummary");
+    const prevPageButton = document.getElementById("prevPageButton");
+    const nextPageButton = document.getElementById("nextPageButton");
+    const pageIndicator = document.getElementById("pageIndicator");
+
+    const filterForm = document.getElementById("filterForm");
+    const filterDate = document.getElementById("filterDate");
+    const filterPhone = document.getElementById("filterPhone");
+    const filterUserName = document.getElementById("filterUserName");
+    const filterRoleName = document.getElementById("filterRoleName");
+
+    const addAccountModal = document.getElementById("addAccountModal");
+    const openAddAccountButton = document.getElementById("openAddAccountButton");
+    const closeAddAccountButton = document.getElementById("closeAddAccountButton");
+    const cancelAddAccountButton = document.getElementById("cancelAddAccountButton");
+    const addAccountForm = document.getElementById("addAccountForm");
+    const addPhone = document.getElementById("addPhone");
+    const addUserName = document.getElementById("addUserName");
+    const addRoleName = document.getElementById("addRoleName");
+
+    const editDrawer = document.getElementById("editDrawer");
+    const editDrawerPanel = document.getElementById("editDrawerPanel");
+    const closeEditDrawerButton = document.getElementById("closeEditDrawerButton");
+    const cancelEditDrawerButton = document.getElementById("cancelEditDrawerButton");
+    const editAccountForm = document.getElementById("editAccountForm");
+    const editCreatedAt = document.getElementById("editCreatedAt");
+    const editRoleName = document.getElementById("editRoleName");
+    const editPhone = document.getElementById("editPhone");
+    const editUserName = document.getElementById("editUserName");
+
+    const resetPasswordModal = document.getElementById("resetPasswordModal");
+    const closeResetPasswordButton = document.getElementById("closeResetPasswordButton");
+    const cancelResetPasswordButton = document.getElementById("cancelResetPasswordButton");
+    const confirmResetPasswordButton = document.getElementById("confirmResetPasswordButton");
+    const resetPasswordDescription = document.getElementById("resetPasswordDescription");
+
+    const deleteAccountModal = document.getElementById("deleteAccountModal");
+    const closeDeleteAccountButton = document.getElementById("closeDeleteAccountButton");
+    const cancelDeleteAccountButton = document.getElementById("cancelDeleteAccountButton");
+    const confirmDeleteAccountButton = document.getElementById("confirmDeleteAccountButton");
+    const deleteAccountDescription = document.getElementById("deleteAccountDescription");
+    const openUserCenterButton = document.getElementById("openUserCenterButton");
+    const userCenterAvatar = document.getElementById("userCenterAvatar");
+    const userCenterName = document.getElementById("userCenterName");
+    const userCenterModal = document.getElementById("userCenterModal");
+    const closeUserCenterButton = document.getElementById("closeUserCenterButton");
+    const userProfileAvatar = document.getElementById("userProfileAvatar");
+    const userProfileName = document.getElementById("userProfileName");
+    const userProfilePhone = document.getElementById("userProfilePhone");
+    const openChangePasswordButton = document.getElementById("openChangePasswordButton");
+    const openLogoutButton = document.getElementById("openLogoutButton");
+    const changePasswordModal = document.getElementById("changePasswordModal");
+    const closeChangePasswordButton = document.getElementById("closeChangePasswordButton");
+    const cancelChangePasswordButton = document.getElementById("cancelChangePasswordButton");
+    const changePasswordForm = document.getElementById("changePasswordForm");
+    const currentPassword = document.getElementById("currentPassword");
+    const newPassword = document.getElementById("newPassword");
+    const confirmNewPassword = document.getElementById("confirmNewPassword");
+    const changePasswordError = document.getElementById("changePasswordError");
+    const logoutConfirmModal = document.getElementById("logoutConfirmModal");
+    const closeLogoutConfirmButton = document.getElementById("closeLogoutConfirmButton");
+    const cancelLogoutConfirmButton = document.getElementById("cancelLogoutConfirmButton");
+    const confirmLogoutButton = document.getElementById("confirmLogoutButton");
+
+    function escapeHtml(value) {
+      return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+    }
+
+    function openOverlay(modalElement) {
+      modalElement.classList.remove("hidden");
+      modalElement.classList.add("flex");
+      document.body.classList.add("modal-open");
+    }
+
+    function closeOverlay(modalElement) {
+      modalElement.classList.add("hidden");
+      modalElement.classList.remove("flex");
+      const hasVisiblePopup = [addAccountModal, resetPasswordModal, deleteAccountModal, userCenterModal, changePasswordModal, logoutConfirmModal].some(
+        (modal) => !modal.classList.contains("hidden")
+      );
+      if (!hasVisiblePopup && editDrawer.classList.contains("hidden")) {
+        document.body.classList.remove("modal-open");
+      }
+    }
+
+    function openDrawer() {
+      editDrawer.classList.remove("hidden");
+      document.body.classList.add("modal-open");
+      requestAnimationFrame(() => {
+        editDrawerPanel.classList.add("open");
+      });
+    }
+
+    function closeDrawer() {
+      editDrawerPanel.classList.remove("open");
+      window.setTimeout(() => {
+        editDrawer.classList.add("hidden");
+        const hasVisiblePopup = [addAccountModal, resetPasswordModal, deleteAccountModal, userCenterModal, changePasswordModal, logoutConfirmModal].some(
+          (modal) => !modal.classList.contains("hidden")
+        );
+        if (!hasVisiblePopup) {
+          document.body.classList.remove("modal-open");
+        }
+      }, 220);
+    }
+
+    function closeAllPopups() {
+      closeOverlay(addAccountModal);
+      closeOverlay(resetPasswordModal);
+      closeOverlay(deleteAccountModal);
+      closeOverlay(userCenterModal);
+      closeOverlay(changePasswordModal);
+      closeOverlay(logoutConfirmModal);
+      closeDrawer();
+    }
+
+    function formatDateTime(date) {
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const day = String(date.getDate()).padStart(2, "0");
+      const hours = String(date.getHours()).padStart(2, "0");
+      const minutes = String(date.getMinutes()).padStart(2, "0");
+      return `${year}-${month}-${day} ${hours}:${minutes}`;
+    }
+
+    function getAccountById(accountId) {
+      return accounts.find((account) => account.id === accountId);
+    }
+
+    function getCurrentAccount() {
+      currentSession = window.CRMAuth.getSession();
+      if (!currentSession || !currentSession.accountId) return null;
+      return getAccountById(currentSession.accountId);
+    }
+
+    function normalizeAccounts(data) {
+      if (!Array.isArray(data) || !data.length) {
+        return [...embeddedAccounts];
+      }
+
+      return data.map((item, index) => ({
+        id: item.id || `ACC${String(index + 1).padStart(8, "0")}`,
+        createdAt: item.createdAt || formatDateTime(new Date()),
+        phone: item.phone || "",
+        userName: item.userName || "",
+        roleName: item.roleName || "管理员",
+        password: item.password || defaultPassword
+      }));
+    }
+
+    function normalizeRoles(data) {
+      const source = Array.isArray(data) && data.length ? data : embeddedRoles;
+      const roleNames = source
+        .map((item) => item.roleName)
+        .filter(Boolean);
+      return [...new Set(roleNames)];
+    }
+
+    function loadCachedAccounts() {
+      try {
+        const cached = window.localStorage.getItem(accountStorageKey);
+        return cached ? normalizeAccounts(JSON.parse(cached)) : null;
+      } catch (error) {
+        console.warn("读取本地账号数据失败，已忽略缓存。", error);
+        return null;
+      }
+    }
+
+    function saveAccounts() {
+      window.localStorage.setItem(accountStorageKey, JSON.stringify(accounts));
+    }
+
+    function loadCachedRoles() {
+      try {
+        const cached = window.localStorage.getItem(roleStorageKey);
+        return cached ? normalizeRoles(JSON.parse(cached)) : null;
+      } catch (error) {
+        console.warn("读取本地角色数据失败，已忽略缓存。", error);
+        return null;
+      }
+    }
+
+    async function loadAccountsSeedData() {
+      const cached = loadCachedAccounts();
+      if (cached) return cached;
+
+      if (window.location.protocol === "file:") {
+        return normalizeAccounts(embeddedAccounts);
+      }
+
+      try {
+        const response = await fetch("./data/accounts.json", { cache: "no-store" });
+        if (!response.ok) {
+          throw new Error("读取账号 JSON 失败");
+        }
+        const data = await response.json();
+        return normalizeAccounts(data);
+      } catch (error) {
+        console.warn("读取账号初始数据失败，已回退到内置数据。", error);
+        return normalizeAccounts(embeddedAccounts);
+      }
+    }
+
+    async function loadRoleOptions() {
+      const cachedRoles = loadCachedRoles();
+      if (cachedRoles && cachedRoles.length) return cachedRoles;
+
+      if (window.location.protocol === "file:") {
+        return normalizeRoles(embeddedRoles);
+      }
+
+      try {
+        const response = await fetch("./data/roles.json", { cache: "no-store" });
+        if (!response.ok) {
+          throw new Error("读取角色 JSON 失败");
+        }
+        const data = await response.json();
+        return normalizeRoles(data);
+      } catch (error) {
+        console.warn("读取角色初始数据失败，已回退到内置角色。", error);
+        return normalizeRoles(embeddedRoles);
+      }
+    }
+
+    function renderRoleOptions() {
+      const currentFilterValue = filterRoleName.value || "全部";
+
+      filterRoleName.innerHTML = [
+        '<option value="全部">全部</option>',
+        ...roleOptions.map((roleName) => `<option value="${escapeHtml(roleName)}">${escapeHtml(roleName)}</option>`)
+      ].join("");
+
+      addRoleName.innerHTML = [
+        '<option value="">请选择所属角色</option>',
+        ...roleOptions.map((roleName) => `<option value="${escapeHtml(roleName)}">${escapeHtml(roleName)}</option>`)
+      ].join("");
+
+      filterRoleName.value = roleOptions.includes(currentFilterValue) ? currentFilterValue : "全部";
+    }
+
+    function renderUserCenter() {
+      const currentAccount = getCurrentAccount();
+      userCenterAvatar.src = avatarDataUrl;
+      userProfileAvatar.src = avatarDataUrl;
+
+      if (!currentAccount) {
+        userCenterName.textContent = "未登录用户";
+        userProfileName.textContent = "-";
+        userProfilePhone.textContent = "-";
+        return;
+      }
+
+      userCenterName.textContent = currentAccount.userName;
+      userProfileName.textContent = currentAccount.userName;
+      userProfilePhone.textContent = currentAccount.phone;
+    }
+
+    function updateStats() {
+      const adminCount = accounts.filter((account) => account.roleName === "管理员").length;
+      heroAccountCount.textContent = accounts.length.toLocaleString("zh-CN");
+      heroAdminCount.textContent = adminCount.toLocaleString("zh-CN");
+      heroRoleCount.textContent = roleOptions.length.toLocaleString("zh-CN");
+      sideAccountCount.textContent = accounts.length.toLocaleString("zh-CN");
+      sideAccountHint.textContent = `管理员账号 ${adminCount} 个`;
+      filteredBadge.textContent = `搜索结果共 ${filteredAccounts.length} 条`;
+    }
+
+    function updatePagination(totalItems) {
+      const totalPages = Math.max(1, Math.ceil(totalItems / pageSize));
+      currentPage = Math.min(currentPage, totalPages);
+      pageIndicator.textContent = `第 ${currentPage} / ${totalPages} 页`;
+      prevPageButton.disabled = currentPage === 1 || totalItems === 0;
+      nextPageButton.disabled = currentPage === totalPages || totalItems === 0;
+    }
+
+    function renderAccounts() {
+      const totalItems = filteredAccounts.length;
+      updatePagination(totalItems);
+
+      if (!filteredAccounts.length) {
+        accountTableBody.innerHTML = `
+          <tr>
+            <td colspan="5" class="border-t border-b border-slate-100 px-6 py-10 text-center text-sm text-slate-500">
+              未查询到符合条件的账号，请调整筛选条件后重试。
+            </td>
+          </tr>
+        `;
+        tableSummary.textContent = `共 ${accounts.length} 条账号，当前展示 0 条`;
+        updateStats();
+        return;
+      }
+
+      const startIndex = (currentPage - 1) * pageSize;
+      const paginatedAccounts = filteredAccounts.slice(startIndex, startIndex + pageSize);
+      const endIndex = startIndex + paginatedAccounts.length;
+
+      accountTableBody.innerHTML = paginatedAccounts.map((account, index) => {
+        const borderClass = index === paginatedAccounts.length - 1 ? "border-t border-b" : "border-t";
+        return `
+          <tr class="transition-colors duration-200 hover:bg-brand-50/40">
+            <td class="${borderClass} border-slate-100 px-6 py-4 text-center text-sm text-slate-600">${escapeHtml(account.createdAt)}</td>
+            <td class="${borderClass} border-slate-100 px-6 py-4 text-center text-sm font-semibold text-slate-800">${escapeHtml(account.phone)}</td>
+            <td class="${borderClass} border-slate-100 px-6 py-4 text-center text-sm text-slate-800">${escapeHtml(account.userName)}</td>
+            <td class="${borderClass} border-slate-100 px-6 py-4 text-center text-sm text-slate-600">${escapeHtml(account.roleName)}</td>
+            <td class="${borderClass} border-slate-100 px-6 py-4 text-center">
+              <div class="flex flex-wrap justify-center gap-2">
+                <button data-action="edit" data-id="${escapeHtml(account.id)}" class="cursor-pointer rounded-xl border border-slate-200 px-3 py-2 text-sm font-medium text-slate-700 transition-colors duration-200 hover:border-brand-200 hover:bg-brand-50 hover:text-brand-600">修改</button>
+                <button data-action="reset-password" data-id="${escapeHtml(account.id)}" class="cursor-pointer rounded-xl bg-brand-500 px-3 py-2 text-sm font-medium text-white transition-colors duration-200 hover:bg-brand-600">重置密码</button>
+                <button data-action="delete" data-id="${escapeHtml(account.id)}" class="cursor-pointer rounded-xl border border-rose-200 bg-rose-50 px-3 py-2 text-sm font-medium text-rose-600 transition-colors duration-200 hover:bg-rose-100">删除</button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join("");
+
+      tableSummary.textContent = `共 ${accounts.length} 条账号，当前展示 ${startIndex + 1} - ${endIndex} 条`;
+      updateStats();
+    }
+
+    function applyFilters() {
+      const dateValue = filterDate.value.trim();
+      const phoneValue = filterPhone.value.trim();
+      const userNameValue = filterUserName.value.trim();
+      const roleNameValue = filterRoleName.value;
+
+      filteredAccounts = accounts.filter((account) => {
+        const matchesDate = !dateValue || account.createdAt.startsWith(dateValue);
+        const matchesPhone = !phoneValue || account.phone.includes(phoneValue);
+        const matchesUserName = !userNameValue || account.userName.includes(userNameValue);
+        const matchesRoleName = roleNameValue === "全部" || account.roleName === roleNameValue;
+        return matchesDate && matchesPhone && matchesUserName && matchesRoleName;
+      });
+
+      currentPage = 1;
+      renderAccounts();
+    }
+
+    function generateAccountId() {
+      const now = new Date();
+      const datePart = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, "0")}${String(now.getDate()).padStart(2, "0")}`;
+      const sequence = String(accounts.length + 1).padStart(3, "0");
+      return `ACC${datePart}${sequence}`;
+    }
+
+    function phoneExists(phone, excludeId = null) {
+      return accounts.some((account) => account.id !== excludeId && account.phone === phone);
+    }
+
+    function openAddAccountModal() {
+      addAccountForm.reset();
+      if (roleOptions.length) {
+        addRoleName.value = roleOptions.includes("管理员") ? "管理员" : "";
+      }
+      openOverlay(addAccountModal);
+      addPhone.focus();
+    }
+
+    function closeAddAccountModal() {
+      closeOverlay(addAccountModal);
+      addAccountForm.reset();
+    }
+
+    function openEditDrawer(accountId) {
+      const account = getAccountById(accountId);
+      if (!account) return;
+      activeAccountId = accountId;
+      editCreatedAt.value = account.createdAt;
+      editRoleName.value = account.roleName;
+      editPhone.value = account.phone;
+      editUserName.value = account.userName;
+      openDrawer();
+      editPhone.focus();
+    }
+
+    function closeEditAccountDrawer() {
+      closeDrawer();
+      editAccountForm.reset();
+    }
+
+    function openResetPasswordModal(accountId) {
+      const account = getAccountById(accountId);
+      if (!account) return;
+      activeAccountId = accountId;
+      resetPasswordDescription.textContent = `确认后账号 ${account.phone} 的密码将重置为默认值 ${resetPasswordValue}。`;
+      openOverlay(resetPasswordModal);
+    }
+
+    function closeResetPasswordModal() {
+      closeOverlay(resetPasswordModal);
+    }
+
+    function openDeleteAccountModal(accountId) {
+      const account = getAccountById(accountId);
+      if (!account) return;
+      activeAccountId = accountId;
+      deleteAccountDescription.textContent = `确认后将删除账号 ${account.phone}（${account.userName}），对应数据将从列表中移除。`;
+      openOverlay(deleteAccountModal);
+    }
+
+    function closeDeleteAccountModal() {
+      closeOverlay(deleteAccountModal);
+    }
+
+    function openUserCenterModal() {
+      renderUserCenter();
+      openOverlay(userCenterModal);
+    }
+
+    function closeUserCenterModal() {
+      closeOverlay(userCenterModal);
+    }
+
+    function openChangePasswordModal() {
+      changePasswordForm.reset();
+      changePasswordError.classList.add("hidden");
+      changePasswordError.textContent = "";
+      openOverlay(changePasswordModal);
+      currentPassword.focus();
+    }
+
+    function closeChangePasswordModal() {
+      closeOverlay(changePasswordModal);
+      changePasswordForm.reset();
+      changePasswordError.classList.add("hidden");
+      changePasswordError.textContent = "";
+    }
+
+    function openLogoutConfirmModal() {
+      openOverlay(logoutConfirmModal);
+    }
+
+    function closeLogoutConfirmModal() {
+      closeOverlay(logoutConfirmModal);
+    }
+
+    openAddAccountButton.addEventListener("click", openAddAccountModal);
+    closeAddAccountButton.addEventListener("click", closeAddAccountModal);
+    cancelAddAccountButton.addEventListener("click", closeAddAccountModal);
+    closeEditDrawerButton.addEventListener("click", closeEditAccountDrawer);
+    cancelEditDrawerButton.addEventListener("click", closeEditAccountDrawer);
+    closeResetPasswordButton.addEventListener("click", closeResetPasswordModal);
+    cancelResetPasswordButton.addEventListener("click", closeResetPasswordModal);
+    closeDeleteAccountButton.addEventListener("click", closeDeleteAccountModal);
+    cancelDeleteAccountButton.addEventListener("click", closeDeleteAccountModal);
+    openUserCenterButton.addEventListener("click", openUserCenterModal);
+    closeUserCenterButton.addEventListener("click", closeUserCenterModal);
+    openChangePasswordButton.addEventListener("click", openChangePasswordModal);
+    openLogoutButton.addEventListener("click", openLogoutConfirmModal);
+    closeChangePasswordButton.addEventListener("click", closeChangePasswordModal);
+    cancelChangePasswordButton.addEventListener("click", closeChangePasswordModal);
+    closeLogoutConfirmButton.addEventListener("click", closeLogoutConfirmModal);
+    cancelLogoutConfirmButton.addEventListener("click", closeLogoutConfirmModal);
+
+    filterForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+      applyFilters();
+    });
+
+    prevPageButton.addEventListener("click", () => {
+      if (currentPage > 1) {
+        currentPage -= 1;
+        renderAccounts();
+      }
+    });
+
+    nextPageButton.addEventListener("click", () => {
+      const totalPages = Math.max(1, Math.ceil(filteredAccounts.length / pageSize));
+      if (currentPage < totalPages) {
+        currentPage += 1;
+        renderAccounts();
+      }
+    });
+
+    accountTableBody.addEventListener("click", (event) => {
+      const actionButton = event.target.closest("button[data-action]");
+      if (!actionButton) return;
+
+      const { action, id } = actionButton.dataset;
+      if (action === "edit") {
+        openEditDrawer(id);
+      }
+      if (action === "reset-password") {
+        openResetPasswordModal(id);
+      }
+      if (action === "delete") {
+        openDeleteAccountModal(id);
+      }
+    });
+
+    [addAccountModal, resetPasswordModal, deleteAccountModal].forEach((modal) => {
+      modal.addEventListener("click", (event) => {
+        if (event.target === modal) {
+          closeOverlay(modal);
+        }
+      });
+    });
+
+    editDrawer.addEventListener("click", (event) => {
+      if (event.target === editDrawer) {
+        closeEditAccountDrawer();
+      }
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") {
+        closeAllPopups();
+      }
+    });
+
+    addAccountForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const phone = addPhone.value.trim();
+      const userName = addUserName.value.trim();
+      const roleName = addRoleName.value.trim();
+      if (!phone || !userName || !roleName) return;
+
+      if (phoneExists(phone)) {
+        window.alert("该手机号已存在，请重新输入。");
+        return;
+      }
+
+      accounts.unshift({
+        id: generateAccountId(),
+        createdAt: formatDateTime(new Date()),
+        phone,
+        userName,
+        roleName,
+        password: defaultPassword
+      });
+
+      saveAccounts();
+      closeAddAccountModal();
+      applyFilters();
+    });
+
+    editAccountForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const account = getAccountById(activeAccountId);
+      if (!account) return;
+
+      const phone = editPhone.value.trim();
+      const userName = editUserName.value.trim();
+      if (!phone || !userName) return;
+
+      if (phoneExists(phone, account.id)) {
+        window.alert("该手机号已存在，请重新输入。");
+        return;
+      }
+
+      account.phone = phone;
+      account.userName = userName;
+      saveAccounts();
+      window.CRMAuth.syncSessionFromAccount(account);
+      window.CRMAuth.applyNavigationPermissions();
+      renderUserCenter();
+      closeEditAccountDrawer();
+      applyFilters();
+    });
+
+    confirmResetPasswordButton.addEventListener("click", () => {
+      const account = getAccountById(activeAccountId);
+      if (!account) return;
+      account.password = resetPasswordValue;
+      saveAccounts();
+      closeResetPasswordModal();
+    });
+
+    confirmDeleteAccountButton.addEventListener("click", () => {
+      const account = getAccountById(activeAccountId);
+      if (!account) return;
+      const shouldLogout = currentSession && currentSession.accountId === account.id;
+      accounts = accounts.filter((item) => item.id !== account.id);
+      saveAccounts();
+      window.CRMAuth.removeSessionIfAccountDeleted(account.id);
+      closeDeleteAccountModal();
+      if (shouldLogout) {
+        window.location.href = "login.html";
+        return;
+      }
+      applyFilters();
+    });
+
+    changePasswordForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const currentAccount = getCurrentAccount();
+      if (!currentAccount) {
+        window.location.href = "login.html";
+        return;
+      }
+
+      const oldPassword = currentPassword.value;
+      const nextPassword = newPassword.value;
+      const confirmPasswordValue = confirmNewPassword.value;
+
+      if (currentAccount.password !== oldPassword) {
+        changePasswordError.textContent = "原密码输入错误。";
+        changePasswordError.classList.remove("hidden");
+        return;
+      }
+
+      if (nextPassword.length < 6) {
+        changePasswordError.textContent = "新密码长度不能少于 6 位。";
+        changePasswordError.classList.remove("hidden");
+        return;
+      }
+
+      if (nextPassword !== confirmPasswordValue) {
+        changePasswordError.textContent = "两次输入的新密码不一致。";
+        changePasswordError.classList.remove("hidden");
+        return;
+      }
+
+      currentAccount.password = nextPassword;
+      saveAccounts();
+      closeChangePasswordModal();
+      closeUserCenterModal();
+      window.alert("密码修改成功。");
+    });
+
+    confirmLogoutButton.addEventListener("click", () => {
+      window.CRMAuth.clearSession();
+      window.location.href = "login.html";
+    });
+
+    async function initPage() {
+      roleOptions = await loadRoleOptions();
+      renderRoleOptions();
+      accounts = await loadAccountsSeedData();
+      saveAccounts();
+      filteredAccounts = [...accounts];
+      renderUserCenter();
+      renderAccounts();
+    }
+
+    initPage();
+  </script>
+</body>
+</html>

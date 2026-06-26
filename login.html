@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>系统登录 - 邮储文询客智中枢</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: "#f4fcf7",
+              100: "#e6f8ed",
+              200: "#caeed9",
+              300: "#a6dfbf",
+              400: "#7fcd9f",
+              500: "#58b67e",
+              600: "#3f9f68",
+              700: "#338353",
+              800: "#2f6c47",
+              900: "#28563a"
+            }
+          },
+          boxShadow: {
+            soft: "0 6px 18px rgba(63, 159, 104, 0.07)",
+            panel: "0 3px 10px rgba(63, 159, 104, 0.05)"
+          },
+          backgroundImage: {
+            "hero-glow": "linear-gradient(180deg, rgba(88,182,126,0.08) 0%, rgba(255,255,255,0) 24%)"
+          }
+        }
+      }
+    };
+  </script>
+  <script src="./auth.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    body { font-family: "Inter", "PingFang SC", "Microsoft YaHei", sans-serif; }
+    .glass { background: #ffffff; border: 1px solid #e1eee6; }
+  </style>
+</head>
+<body class="min-h-screen bg-[#fbfefd] bg-hero-glow text-slate-800">
+  <div class="flex min-h-screen items-center justify-center px-4 py-10">
+    <div class="glass w-full max-w-md rounded-3xl p-8 shadow-soft">
+      <div class="flex items-center gap-3">
+        <div class="flex h-14 w-14 items-center justify-center rounded-2xl border border-slate-200 bg-white shadow-panel">
+          <img
+            src="file:///C:/Users/123/.cursor/projects/f-CRM/assets/c__Users_123_AppData_Roaming_Cursor_User_workspaceStorage_empty-window_images_fW2Zi8ZvH-0bd9f079-3bf4-4ba7-ba15-c678011f227c.png"
+            alt="中国邮政储蓄银行标志"
+            class="h-[35px] w-[35px] object-contain"
+          />
+        </div>
+        <div>
+          <p class="text-xs uppercase tracking-[0.28em] text-brand-500/70">i-QCustAgent</p>
+          <h1 class="mt-1 text-lg font-semibold tracking-wide text-slate-900">邮储文询客智中枢</h1>
+        </div>
+      </div>
+
+      <div class="mt-8">
+        <p class="text-sm font-medium text-brand-600">Web 端系统登录</p>
+        <h2 class="mt-2 text-3xl font-semibold tracking-tight text-slate-900">登录后进入业务系统</h2>
+        <p class="mt-3 text-sm leading-6 text-slate-500">请输入手机号与密码。登录成功后将进入线索管理页，并记录登录状态与权限状态。</p>
+      </div>
+
+      <form id="loginForm" class="mt-8 space-y-4">
+        <label class="block">
+          <span class="mb-2 block text-sm font-medium text-slate-700">手机号</span>
+          <input id="loginPhone" type="text" required placeholder="请输入手机号" class="w-full rounded-xl border border-slate-300 bg-[#fcfffd] px-4 py-3 text-sm text-slate-900 outline-none transition-colors duration-200 placeholder:text-slate-400 focus:border-brand-400 focus:bg-white focus:ring-4 focus:ring-brand-50" />
+        </label>
+
+        <label class="block">
+          <span class="mb-2 block text-sm font-medium text-slate-700">密码</span>
+          <input id="loginPassword" type="password" required placeholder="请输入密码" class="w-full rounded-xl border border-slate-300 bg-[#fcfffd] px-4 py-3 text-sm text-slate-900 outline-none transition-colors duration-200 placeholder:text-slate-400 focus:border-brand-400 focus:bg-white focus:ring-4 focus:ring-brand-50" />
+        </label>
+
+        <p id="loginError" class="hidden rounded-xl border border-rose-100 bg-rose-50 px-4 py-3 text-sm text-rose-600"></p>
+
+        <button type="submit" class="w-full cursor-pointer rounded-xl bg-brand-500 px-5 py-3 text-sm font-semibold text-white shadow-panel transition-colors duration-200 hover:bg-brand-600">登录</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    const loginForm = document.getElementById("loginForm");
+    const loginPhone = document.getElementById("loginPhone");
+    const loginPassword = document.getElementById("loginPassword");
+    const loginError = document.getElementById("loginError");
+
+    const existingSession = window.CRMAuth.getSession();
+    if (existingSession && existingSession.isAuthenticated) {
+      window.location.href = "crm-leads.html";
+    }
+
+    loginForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      loginError.classList.add("hidden");
+      loginError.textContent = "";
+
+      const result = await window.CRMAuth.login(loginPhone.value.trim(), loginPassword.value);
+      if (!result.ok) {
+        loginError.textContent = result.message;
+        loginError.classList.remove("hidden");
+        return;
+      }
+
+      window.location.href = "crm-leads.html";
+    });
+  </script>
+</body>
+</html>

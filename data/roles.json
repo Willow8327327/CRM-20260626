@@ -1,0 +1,29 @@
+[
+  {
+    "id": "ROLE20260622001",
+    "createdAt": "2026-06-22 09:00",
+    "roleName": "管理员",
+    "permissionBindings": [
+      {
+        "page": "角色与权限管理",
+        "actions": ["查看", "修改", "增加", "删除"],
+        "dataScope": "全部"
+      },
+      {
+        "page": "线索管理",
+        "actions": ["查看", "修改", "增加", "删除"],
+        "dataScope": "全部"
+      },
+      {
+        "page": "商品管理",
+        "actions": ["查看", "修改", "增加", "删除"],
+        "dataScope": "全部"
+      },
+      {
+        "page": "订单管理",
+        "actions": ["查看", "修改", "增加", "删除"],
+        "dataScope": "全部"
+      }
+    ]
+  }
+]

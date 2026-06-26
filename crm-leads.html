@@ -1,0 +1,1075 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>线索管理 - 邮储文询客智中枢</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: "#f4fcf7",
+              100: "#e6f8ed",
+              200: "#caeed9",
+              300: "#a6dfbf",
+              400: "#7fcd9f",
+              500: "#58b67e",
+              600: "#3f9f68",
+              700: "#338353",
+              800: "#2f6c47",
+              900: "#28563a"
+            }
+          },
+          boxShadow: {
+            soft: "0 6px 18px rgba(63, 159, 104, 0.07)",
+            panel: "0 3px 10px rgba(63, 159, 104, 0.05)"
+          },
+          backgroundImage: {
+            "hero-glow": "linear-gradient(180deg, rgba(88,182,126,0.08) 0%, rgba(255,255,255,0) 24%)"
+          }
+        }
+      }
+    };
+  </script>
+  <script src="./auth.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      font-family: "Inter", "PingFang SC", "Microsoft YaHei", sans-serif;
+    }
+
+    .glass {
+      background: #ffffff;
+      border: 1px solid #e1eee6;
+    }
+
+    .modal-open {
+      overflow: hidden;
+    }
+
+    .bank-divider {
+      position: relative;
+      padding-left: 14px;
+    }
+
+    .bank-divider::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 4px;
+      height: 18px;
+      border-radius: 999px;
+      background: #58b67e;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        scroll-behavior: auto !important;
+        transition: none !important;
+      }
+    }
+  </style>
+</head>
+<body class="min-h-screen bg-[#fbfefd] bg-hero-glow text-slate-800">
+  <div class="flex min-h-screen">
+    <aside class="w-full max-w-[272px] border-r border-[#d8e9de] bg-[#f7faf8] px-5 py-6 text-slate-800">
+      <div class="mb-10 flex items-center gap-3">
+        <div class="flex h-[52px] w-[52px] items-center justify-center rounded-2xl border border-slate-200 bg-white shadow-panel">
+          <img
+            src="file:///C:/Users/123/.cursor/projects/f-CRM/assets/c__Users_123_AppData_Roaming_Cursor_User_workspaceStorage_empty-window_images_fW2Zi8ZvH-0bd9f079-3bf4-4ba7-ba15-c678011f227c.png"
+            alt="中国邮政储蓄银行标志"
+            class="h-[35px] w-[35px] object-contain"
+          />
+        </div>
+        <div class="min-w-0">
+          <p class="text-xs uppercase tracking-[0.28em] text-brand-500/70">i-QCustAgent</p>
+          <h1 class="mt-1 text-lg font-semibold tracking-wide text-slate-900">邮储文询客智中枢</h1>
+        </div>
+      </div>
+
+      <div class="mb-6 rounded-2xl border border-brand-100 bg-gradient-to-r from-brand-50 to-white p-4">
+        <p class="text-sm text-brand-600">今日线索增长</p>
+        <div class="mt-3 flex items-end justify-between">
+          <div>
+            <p class="text-3xl font-semibold text-slate-900">+128</p>
+            <p class="mt-1 text-xs text-slate-500">较昨日提升 18.6%</p>
+          </div>
+          <span class="rounded-full border border-brand-100 bg-white px-3 py-1 text-xs font-medium text-brand-600">稳定</span>
+        </div>
+      </div>
+
+      <nav class="space-y-2">
+        <a href="dashboard.html" class="flex cursor-pointer items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-slate-700 transition-colors duration-200 hover:bg-brand-50 hover:text-brand-700">
+          <svg class="h-5 w-5 text-brand-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 19h16M7 16V9m5 7V5m5 11v-6" />
+          </svg>
+          数据仪表盘
+        </a>
+        <a href="crm-leads.html" class="flex cursor-pointer items-center gap-3 rounded-xl border border-brand-100 bg-brand-500 px-4 py-3 text-sm font-semibold text-white shadow-panel transition-colors duration-200">
+          <svg class="h-5 w-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 7h16M4 12h10M4 17h7" />
+          </svg>
+          线索管理
+        </a>
+        <a href="product-management.html" class="flex cursor-pointer items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-slate-700 transition-colors duration-200 hover:bg-brand-50 hover:text-brand-700">
+          <svg class="h-5 w-5 text-brand-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 7.5h16M6 4h12a2 2 0 0 1 2 2v12.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 18.5V6a2 2 0 0 1 2-2Zm1 7h4m-4 4h7" />
+          </svg>
+          商品管理
+        </a>
+        <a href="order-management.html" class="flex cursor-pointer items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-slate-700 transition-colors duration-200 hover:bg-brand-50 hover:text-brand-700">
+          <svg class="h-5 w-5 text-brand-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M5 6.5h14M7 4h10a2 2 0 0 1 2 2v11.5A1.5 1.5 0 0 1 17.5 19h-11A1.5 1.5 0 0 1 5 17.5V6a2 2 0 0 1 2-2Zm1 6h8m-8 4h5" />
+          </svg>
+          订单管理
+        </a>
+        <a href="role-management.html" class="flex cursor-pointer items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-slate-700 transition-colors duration-200 hover:bg-brand-50 hover:text-brand-700">
+          <svg class="h-5 w-5 text-brand-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M7 8h10M7 12h10M7 16h6M5 4h14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Z" />
+          </svg>
+          角色与权限管理
+        </a>
+        <a href="customer-management.html" class="flex cursor-pointer items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-slate-700 transition-colors duration-200 hover:bg-brand-50 hover:text-brand-700">
+          <svg class="h-5 w-5 text-brand-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 7h12M6 12h12M6 17h7M5 4h14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Zm2 0v16" />
+          </svg>
+          账号管理
+        </a>
+      </nav>
+
+      <div class="mt-10 rounded-2xl border border-slate-200 bg-white p-4 shadow-panel">
+        <p class="text-sm font-medium text-slate-900">本周重点提醒</p>
+        <p class="mt-2 text-sm leading-6 text-slate-500">优先级为“高”的线索建议在 24 小时内首联，提升转化效率。</p>
+      </div>
+    </aside>
+
+    <main class="flex-1 p-6 lg:p-7">
+      <div class="mx-auto max-w-7xl space-y-6">
+        <header class="glass overflow-hidden rounded-2xl p-6 shadow-soft">
+          <div class="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
+            <div>
+              <p class="text-sm font-medium text-brand-600">客户线索管理</p>
+              <h2 class="mt-2 text-3xl font-semibold tracking-tight text-slate-900">统一管理销售线索，提升企业客户跟进效率</h2>
+              <p class="mt-3 max-w-3xl text-sm leading-6 text-slate-600">围绕客户来源、优先级与跟进责任人进行集中管理，形成更规范、更清晰的业务处理视图。</p>
+            </div>
+            <div class="grid grid-cols-2 gap-3 sm:grid-cols-3">
+              <div class="rounded-xl border border-slate-200 bg-[#fbfefb] px-4 py-3 shadow-panel">
+                <p class="text-xs text-slate-500">总线索数</p>
+                <p id="heroLeadCount" class="mt-1 text-xl font-semibold text-slate-900">0</p>
+              </div>
+              <div class="rounded-xl border border-slate-200 bg-[#fbfefb] px-4 py-3 shadow-panel">
+                <p class="text-xs text-slate-500">待跟进</p>
+                <p id="heroPendingLeadCount" class="mt-1 text-xl font-semibold text-brand-600">0</p>
+              </div>
+              <div class="col-span-2 rounded-xl border border-slate-200 bg-[#fbfefb] px-4 py-3 shadow-panel sm:col-span-1">
+                <p class="text-xs text-slate-500">转化率</p>
+                <p class="mt-1 text-xl font-semibold text-brand-600">24.8%</p>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <section class="glass rounded-2xl p-6 shadow-soft">
+          <div class="flex flex-col gap-4 border-b border-slate-200 pb-5 lg:flex-row lg:items-start lg:justify-between">
+            <div>
+              <h3 class="bank-divider text-lg font-semibold text-slate-900">筛选条件</h3>
+              <p class="mt-1 text-sm text-slate-500">支持按创建时间、姓名、电话和优先级快速定位目标线索。</p>
+            </div>
+            <button id="openModalButton" type="button" class="inline-flex cursor-pointer items-center justify-center gap-2 rounded-xl bg-brand-500 px-5 py-3 text-sm font-semibold text-white shadow-panel transition-colors duration-200 hover:bg-brand-600 focus:outline-none focus:ring-4 focus:ring-brand-100">
+              <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 5v14m7-7H5" />
+              </svg>
+              添加新线索
+            </button>
+          </div>
+
+          <form id="filterForm" class="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-6">
+            <label class="block">
+              <span class="mb-2 block text-sm font-medium text-slate-700">创建时间</span>
+              <input id="filterDate" type="date" class="w-full rounded-xl border border-slate-300 bg-[#fcfffd] px-4 py-3 text-sm text-slate-900 outline-none transition-colors duration-200 focus:border-brand-400 focus:bg-white focus:ring-4 focus:ring-brand-50" />
+            </label>
+
+            <label class="block">
+              <span class="mb-2 block text-sm font-medium text-slate-700">姓名</span>
+              <input id="filterName" type="text" placeholder="请输入姓名" class="w-full rounded-xl border border-slate-300 bg-[#fcfffd] px-4 py-3 text-sm text-slate-900 outline-none transition-colors duration-200 placeholder:text-slate-400 focus:border-brand-400 focus:bg-white focus:ring-4 focus:ring-brand-50" />
+            </label>
+
+            <label class="block">
+              <span class="mb-2 block text-sm font-medium text-slate-700">电话</span>
+              <input id="filterPhone" type="text" placeholder="请输入电话" class="w-full rounded-xl border border-slate-300 bg-[#fcfffd] px-4 py-3 text-sm text-slate-900 outline-none transition-colors duration-200 placeholder:text-slate-400 focus:border-brand-400 focus:bg-white focus:ring-4 focus:ring-brand-50" />
+            </label>
+
+            <label class="block">
+              <span class="mb-2 block text-sm font-medium text-slate-700">优先级</span>
+              <div class="relative">
+                <select id="filterPriority" class="w-full appearance-none rounded-xl border border-slate-300 bg-[#fcfffd] px-4 py-3 pr-10 text-sm text-slate-900 outline-none transition-colors duration-200 focus:border-brand-400 focus:bg-white focus:ring-4 focus:ring-brand-50">
+                  <option value="全部">全部</option>
+                  <option value="高">高</option>
+                  <option value="中">中</option>
+                  <option value="低">低</option>
+                </select>
+                <svg class="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="m6 8 4 4 4-4" />
+                </svg>
+              </div>
+            </label>
+
+            <label class="block">
+              <span class="mb-2 block text-sm font-medium text-slate-700">客户来源</span>
+              <div class="relative">
+                <select id="filterSource" class="w-full appearance-none rounded-xl border border-slate-300 bg-[#fcfffd] px-4 py-3 pr-10 text-sm text-slate-900 outline-none transition-colors duration-200 focus:border-brand-400 focus:bg-white focus:ring-4 focus:ring-brand-50">
+                  <option value="全部">全部</option>
+                </select>
+                <svg class="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="m6 8 4 4 4-4" />
+                </svg>
+              </div>
+            </label>
+
+            <label class="block">
+              <span class="mb-2 block text-sm font-medium text-slate-700">跟进人</span>
+              <div id="filterOwnerContainer" class="relative">
+                <input id="filterOwner" type="text" placeholder="请输入跟进人" class="w-full rounded-xl border border-slate-300 bg-[#fcfffd] px-4 py-3 pr-10 text-sm text-slate-900 outline-none transition-colors duration-200 placeholder:text-slate-400 focus:border-brand-400 focus:bg-white focus:ring-4 focus:ring-brand-50" />
+                <button id="toggleOwnerDropdownButton" type="button" class="absolute inset-y-0 right-0 flex w-10 items-center justify-center text-slate-400" aria-label="展开跟进人下拉框">
+                  <svg id="toggleOwnerDropdownIcon" class="h-4 w-4 transition-transform duration-200" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="m6 8 4 4 4-4" />
+                  </svg>
+                </button>
+                <div id="filterOwnerDropdown" class="absolute z-20 mt-2 hidden max-h-56 w-full overflow-y-auto rounded-xl border border-slate-200 bg-white py-2 shadow-soft"></div>
+              </div>
+            </label>
+          </form>
+
+          <div class="mt-4 flex flex-wrap gap-3">
+            <button id="queryButton" type="button" class="cursor-pointer rounded-xl bg-brand-500 px-5 py-2.5 text-sm font-medium text-white transition-colors duration-200 hover:bg-brand-600">查询</button>
+            <button id="resetButton" type="button" class="cursor-pointer rounded-xl border border-brand-200 bg-white px-5 py-2.5 text-sm font-medium text-brand-600 transition-colors duration-200 hover:bg-brand-50">重置</button>
+          </div>
+        </section>
+
+        <section class="glass rounded-2xl shadow-soft">
+          <div class="flex flex-col gap-3 border-b border-slate-200 px-6 py-5 lg:flex-row lg:items-center lg:justify-between">
+            <div>
+              <h3 class="bank-divider text-lg font-semibold text-slate-900">线索列表</h3>
+              <p class="mt-1 text-sm text-slate-500">展示线索编号、联系人信息、优先级、来源与跟进人。</p>
+            </div>
+            <div class="flex flex-wrap items-center gap-2">
+              <span id="filteredBadge" class="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-semibold text-slate-600">搜索结果共 0 条</span>
+            </div>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="min-w-full border-separate border-spacing-0">
+              <thead>
+                <tr class="bg-[#edf7f1] text-center">
+                  <th class="whitespace-nowrap px-6 py-4 text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">线索编号</th>
+                  <th class="whitespace-nowrap px-6 py-4 text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">创建时间</th>
+                  <th class="whitespace-nowrap px-6 py-4 text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">姓名</th>
+                  <th class="whitespace-nowrap px-6 py-4 text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">电话</th>
+                  <th class="whitespace-nowrap px-6 py-4 text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">优先级</th>
+                  <th class="whitespace-nowrap px-6 py-4 text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">客户来源</th>
+                  <th class="whitespace-nowrap px-6 py-4 text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">跟进人</th>
+                  <th class="whitespace-nowrap px-6 py-4 text-center text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">操作</th>
+                </tr>
+              </thead>
+              <tbody id="leadTableBody" class="bg-white"></tbody>
+            </table>
+          </div>
+
+          <div class="flex flex-col gap-4 px-6 py-5 sm:flex-row sm:items-center sm:justify-between">
+            <p id="tableSummary" class="text-sm text-slate-500">共 0 条线索，当前展示 0 条</p>
+            <div class="flex items-center gap-2">
+              <button id="prevPageButton" type="button" class="cursor-pointer rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition-colors duration-200 hover:bg-slate-50 disabled:cursor-not-allowed disabled:border-slate-100 disabled:bg-slate-50 disabled:text-slate-400">上一页</button>
+              <span id="pageIndicator" class="rounded-xl bg-brand-500 px-4 py-2 text-sm font-medium text-white">第 1 / 1 页</span>
+              <button id="nextPageButton" type="button" class="cursor-pointer rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition-colors duration-200 hover:bg-slate-50 disabled:cursor-not-allowed disabled:border-slate-100 disabled:bg-slate-50 disabled:text-slate-400">下一页</button>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <div id="leadModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-950/45 px-4">
+    <div class="w-full max-w-2xl rounded-2xl border border-slate-200 bg-white p-6 shadow-soft">
+      <div class="flex items-start justify-between gap-4">
+        <div>
+          <p class="text-sm font-medium text-brand-600">新增线索</p>
+          <h3 class="mt-1 text-2xl font-semibold text-slate-900">录入新的客户线索信息</h3>
+          <p class="mt-2 text-sm text-slate-500">填写后将立即同步到线索列表中，便于后续统一跟进。</p>
+        </div>
+        <button id="closeModalButton" type="button" class="cursor-pointer rounded-2xl border border-slate-200 p-3 text-slate-500 transition-colors duration-200 hover:bg-slate-50 hover:text-slate-700" aria-label="关闭弹窗">
+          <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 6l12 12M18 6L6 18" />
+          </svg>
+        </button>
+      </div>
+
+      <form id="leadForm" class="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2">
+        <label class="block">
+          <span class="mb-2 block text-sm font-medium text-slate-700">姓名</span>
+          <input id="leadName" type="text" required placeholder="请输入客户姓名" class="w-full rounded-xl border border-slate-300 bg-[#fcfffd] px-4 py-3 text-sm text-slate-900 outline-none transition-colors duration-200 placeholder:text-slate-400 focus:border-brand-400 focus:bg-white focus:ring-4 focus:ring-brand-50" />
+        </label>
+        <label class="block">
+          <span class="mb-2 block text-sm font-medium text-slate-700">电话</span>
+          <input id="leadPhone" type="text" required placeholder="请输入联系电话" class="w-full rounded-xl border border-slate-300 bg-[#fcfffd] px-4 py-3 text-sm text-slate-900 outline-none transition-colors duration-200 placeholder:text-slate-400 focus:border-brand-400 focus:bg-white focus:ring-4 focus:ring-brand-50" />
+        </label>
+        <label class="block">
+          <span class="mb-2 block text-sm font-medium text-slate-700">优先级</span>
+          <select id="leadPriority" class="w-full rounded-xl border border-slate-300 bg-[#fcfffd] px-4 py-3 text-sm text-slate-900 outline-none transition-colors duration-200 focus:border-brand-400 focus:bg-white focus:ring-4 focus:ring-brand-50">
+            <option value="高">高</option>
+            <option value="中" selected>中</option>
+            <option value="低">低</option>
+          </select>
+        </label>
+        <label class="block">
+          <span class="mb-2 block text-sm font-medium text-slate-700">客户来源</span>
+          <select id="leadSource" required class="w-full rounded-xl border border-slate-300 bg-[#fcfffd] px-4 py-3 text-sm text-slate-900 outline-none transition-colors duration-200 focus:border-brand-400 focus:bg-white focus:ring-4 focus:ring-brand-50">
+            <option value="">请选择客户来源</option>
+          </select>
+        </label>
+        <label class="block md:col-span-2">
+          <span class="mb-2 block text-sm font-medium text-slate-700">跟进人</span>
+          <select id="leadOwner" required class="w-full rounded-xl border border-slate-300 bg-[#fcfffd] px-4 py-3 text-sm text-slate-900 outline-none transition-colors duration-200 focus:border-brand-400 focus:bg-white focus:ring-4 focus:ring-brand-50">
+            <option value="">请选择跟进人</option>
+          </select>
+        </label>
+      </form>
+
+      <div class="mt-6 flex flex-wrap justify-end gap-3">
+        <button id="cancelModalButton" type="button" class="cursor-pointer rounded-xl border border-slate-300 bg-white px-5 py-3 text-sm font-medium text-slate-700 transition-colors duration-200 hover:bg-slate-50">取消</button>
+        <button id="submitLeadButton" type="submit" form="leadForm" class="cursor-pointer rounded-xl bg-brand-500 px-5 py-3 text-sm font-semibold text-white shadow-panel transition-colors duration-200 hover:bg-brand-600">保存线索</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="viewLeadModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-950/45 px-4">
+    <div class="w-full max-w-3xl rounded-2xl border border-slate-200 bg-white p-6 shadow-soft">
+      <div class="flex items-start justify-between gap-4">
+        <div>
+          <p class="text-sm font-medium text-brand-600">线索详情</p>
+          <h3 class="mt-1 text-2xl font-semibold text-slate-900">查看并编辑客户线索信息</h3>
+          <p class="mt-2 text-sm text-slate-500">支持修改当前线索的基础资料，并保留最近跟进动态。</p>
+        </div>
+        <button id="closeViewModalButton" type="button" class="cursor-pointer rounded-2xl border border-slate-200 p-3 text-slate-500 transition-colors duration-200 hover:bg-slate-50 hover:text-slate-700" aria-label="关闭详情弹窗">
+          <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 6l12 12M18 6L6 18" />
+          </svg>
+        </button>
+      </div>
+
+      <form id="viewLeadForm" class="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2">
+        <label class="block">
+          <span class="mb-2 block text-sm font-medium text-slate-700">线索编号</span>
+          <input id="viewLeadId" type="text" readonly class="w-full cursor-not-allowed rounded-xl border border-slate-300 bg-[#f2f8f4] px-4 py-3 text-sm text-slate-500 outline-none" />
+        </label>
+        <label class="block">
+          <span class="mb-2 block text-sm font-medium text-slate-700">创建时间</span>
+          <input id="viewLeadCreatedAt" type="text" readonly class="w-full cursor-not-allowed rounded-xl border border-slate-300 bg-[#f2f8f4] px-4 py-3 text-sm text-slate-500 outline-none" />
+        </label>
+        <label class="block">
+          <span class="mb-2 block text-sm font-medium text-slate-700">姓名</span>
+          <input id="viewLeadName" type="text" required class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition-colors duration-200 focus:border-brand-400 focus:ring-4 focus:ring-brand-100" />
+        </label>
+        <label class="block">
+          <span class="mb-2 block text-sm font-medium text-slate-700">电话</span>
+          <input id="viewLeadPhone" type="text" required class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition-colors duration-200 focus:border-brand-400 focus:ring-4 focus:ring-brand-100" />
+        </label>
+        <label class="block">
+          <span class="mb-2 block text-sm font-medium text-slate-700">优先级</span>
+          <select id="viewLeadPriority" class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition-colors duration-200 focus:border-brand-400 focus:ring-4 focus:ring-brand-100">
+            <option value="高">高</option>
+            <option value="中">中</option>
+            <option value="低">低</option>
+          </select>
+        </label>
+        <label class="block">
+          <span class="mb-2 block text-sm font-medium text-slate-700">客户来源</span>
+          <input id="viewLeadSource" type="text" required class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition-colors duration-200 focus:border-brand-400 focus:ring-4 focus:ring-brand-100" />
+        </label>
+        <label class="block md:col-span-2">
+          <span class="mb-2 block text-sm font-medium text-slate-700">跟进人</span>
+          <input id="viewLeadOwner" type="text" required class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition-colors duration-200 focus:border-brand-400 focus:ring-4 focus:ring-brand-100" />
+        </label>
+      </form>
+
+      <div class="mt-6">
+        <h4 class="text-sm font-semibold text-slate-900">最近跟进</h4>
+        <div id="viewLeadTimeline" class="mt-3 space-y-3"></div>
+      </div>
+
+      <div class="mt-6 flex flex-wrap justify-end gap-3">
+        <button id="cancelViewModalButton" type="button" class="cursor-pointer rounded-xl border border-slate-300 bg-white px-5 py-3 text-sm font-medium text-slate-700 transition-colors duration-200 hover:bg-slate-50">取消</button>
+        <button type="submit" form="viewLeadForm" class="cursor-pointer rounded-xl bg-brand-500 px-5 py-3 text-sm font-semibold text-white shadow-panel transition-colors duration-200 hover:bg-brand-600">保存修改</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="followLeadModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-950/45 px-4">
+    <div class="w-full max-w-2xl rounded-2xl border border-slate-200 bg-white p-6 shadow-soft">
+      <div class="flex items-start justify-between gap-4">
+        <div>
+          <p class="text-sm font-medium text-brand-600">线索跟进</p>
+          <h3 class="mt-1 text-2xl font-semibold text-slate-900">记录本次跟进情况</h3>
+          <p id="followLeadSubtitle" class="mt-2 text-sm text-slate-500">为当前线索补充沟通结果与下一步计划。</p>
+        </div>
+        <button id="closeFollowModalButton" type="button" class="cursor-pointer rounded-2xl border border-slate-200 p-3 text-slate-500 transition-colors duration-200 hover:bg-slate-50 hover:text-slate-700" aria-label="关闭跟进弹窗">
+          <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 6l12 12M18 6L6 18" />
+          </svg>
+        </button>
+      </div>
+
+      <div id="followLeadMeta" class="mt-5 rounded-3xl border border-slate-200 bg-slate-50 px-4 py-4 text-sm text-slate-600"></div>
+
+      <form id="followForm" class="mt-5 space-y-4">
+        <label class="block">
+          <span class="mb-2 block text-sm font-medium text-slate-700">跟进结果</span>
+          <textarea id="followNote" rows="4" required placeholder="请输入本次电话、微信或到访沟通内容" class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition-colors duration-200 placeholder:text-slate-400 focus:border-brand-400 focus:ring-4 focus:ring-brand-100"></textarea>
+        </label>
+        <div class="flex flex-wrap justify-end gap-3">
+        <button id="cancelFollowModalButton" type="button" class="cursor-pointer rounded-xl border border-slate-300 bg-white px-5 py-3 text-sm font-medium text-slate-700 transition-colors duration-200 hover:bg-slate-50">取消</button>
+        <button type="submit" class="cursor-pointer rounded-xl bg-brand-500 px-5 py-3 text-sm font-semibold text-white transition-colors duration-200 hover:bg-brand-600">保存跟进</button>
+        </div>
+      </form>
+
+      <div class="mt-6">
+        <h4 class="text-sm font-semibold text-slate-900">历史跟进记录</h4>
+        <div id="followHistory" class="mt-3 space-y-3"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const currentSession = window.CRMAuth.requireAuth();
+    window.CRMAuth.applyNavigationPermissions();
+    window.CRMAuth.requirePageAccess("线索管理");
+    const leadPageName = "线索管理";
+    const canViewLead = window.CRMAuth.canUseAction(leadPageName, "查看");
+    const canAddLead = window.CRMAuth.canUseAction(leadPageName, "增加");
+    const canEditLead = window.CRMAuth.canUseAction(leadPageName, "修改");
+    const leadDataScope = window.CRMAuth.getDataScope(leadPageName);
+
+    const leads = [
+      {
+        id: "LS20260618001",
+        createdAt: "2026-06-18 09:12",
+        name: "张晨曦",
+        phone: "138****8271",
+        priority: "高",
+        source: "官网表单",
+        owner: "李思远",
+        followUps: [
+          { time: "2026-06-18 10:00", note: "已电话首联，客户明确有近期采购计划，预约明日上午演示。", by: "李思远" }
+        ]
+      },
+      {
+        id: "LS20260618002",
+        createdAt: "2026-06-18 10:08",
+        name: "王雅宁",
+        phone: "139****5520",
+        priority: "中",
+        source: "抖音投放",
+        owner: "周可",
+        followUps: [
+          { time: "2026-06-18 11:20", note: "已添加微信，客户正在内部评估需求，约定后天下午再联系。", by: "周可" }
+        ]
+      },
+      {
+        id: "LS20260618003",
+        createdAt: "2026-06-18 10:44",
+        name: "陈柏舟",
+        phone: "186****4421",
+        priority: "低",
+        source: "渠道转介绍",
+        owner: "赵嘉琪",
+        followUps: []
+      },
+      {
+        id: "LS20260618004",
+        createdAt: "2026-06-18 11:16",
+        name: "刘思彤",
+        phone: "137****1638",
+        priority: "高",
+        source: "微信公众号",
+        owner: "孙明哲",
+        followUps: [
+          { time: "2026-06-18 12:10", note: "客户询问套餐价格与实施周期，已发送产品资料包。", by: "孙明哲" }
+        ]
+      },
+      {
+        id: "LS20260618005",
+        createdAt: "2026-06-18 12:03",
+        name: "许景禾",
+        phone: "158****9044",
+        priority: "中",
+        source: "SEM 广告",
+        owner: "何嘉乐",
+        followUps: []
+      }
+    ];
+
+    let filteredLeads = [...leads];
+    let ownerFilterOptions = [];
+    let ownerDropdownOpen = false;
+    let activeLeadId = null;
+    const pageSize = 5;
+    let currentPage = 1;
+
+    const heroLeadCount = document.getElementById("heroLeadCount");
+    const heroPendingLeadCount = document.getElementById("heroPendingLeadCount");
+    const filteredBadge = document.getElementById("filteredBadge");
+    const leadTableBody = document.getElementById("leadTableBody");
+    const tableSummary = document.getElementById("tableSummary");
+    const prevPageButton = document.getElementById("prevPageButton");
+    const nextPageButton = document.getElementById("nextPageButton");
+    const pageIndicator = document.getElementById("pageIndicator");
+
+    const filterDate = document.getElementById("filterDate");
+    const filterName = document.getElementById("filterName");
+    const filterPhone = document.getElementById("filterPhone");
+    const filterPriority = document.getElementById("filterPriority");
+    const filterSource = document.getElementById("filterSource");
+    const filterOwnerContainer = document.getElementById("filterOwnerContainer");
+    const filterOwner = document.getElementById("filterOwner");
+    const filterOwnerDropdown = document.getElementById("filterOwnerDropdown");
+    const toggleOwnerDropdownButton = document.getElementById("toggleOwnerDropdownButton");
+    const toggleOwnerDropdownIcon = document.getElementById("toggleOwnerDropdownIcon");
+    const queryButton = document.getElementById("queryButton");
+    const resetButton = document.getElementById("resetButton");
+
+    const leadModal = document.getElementById("leadModal");
+    const openModalButton = document.getElementById("openModalButton");
+    const closeModalButton = document.getElementById("closeModalButton");
+    const cancelModalButton = document.getElementById("cancelModalButton");
+    const leadForm = document.getElementById("leadForm");
+    const leadName = document.getElementById("leadName");
+    const leadPhone = document.getElementById("leadPhone");
+    const leadPriority = document.getElementById("leadPriority");
+    const leadSource = document.getElementById("leadSource");
+    const leadOwner = document.getElementById("leadOwner");
+    const viewLeadModal = document.getElementById("viewLeadModal");
+    const closeViewModalButton = document.getElementById("closeViewModalButton");
+    const viewLeadForm = document.getElementById("viewLeadForm");
+    const cancelViewModalButton = document.getElementById("cancelViewModalButton");
+    const viewLeadId = document.getElementById("viewLeadId");
+    const viewLeadCreatedAt = document.getElementById("viewLeadCreatedAt");
+    const viewLeadName = document.getElementById("viewLeadName");
+    const viewLeadPhone = document.getElementById("viewLeadPhone");
+    const viewLeadPriority = document.getElementById("viewLeadPriority");
+    const viewLeadSource = document.getElementById("viewLeadSource");
+    const viewLeadOwner = document.getElementById("viewLeadOwner");
+    const viewLeadTimeline = document.getElementById("viewLeadTimeline");
+    const viewLeadSubmitButton = document.querySelector('button[type="submit"][form="viewLeadForm"]');
+    const followLeadModal = document.getElementById("followLeadModal");
+    const closeFollowModalButton = document.getElementById("closeFollowModalButton");
+    const cancelFollowModalButton = document.getElementById("cancelFollowModalButton");
+    const followLeadSubtitle = document.getElementById("followLeadSubtitle");
+    const followLeadMeta = document.getElementById("followLeadMeta");
+    const followForm = document.getElementById("followForm");
+    const followNote = document.getElementById("followNote");
+    const followHistory = document.getElementById("followHistory");
+
+    function escapeHtml(value) {
+      return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+    }
+
+    function getPriorityBadge(priority) {
+      const styles = {
+        "高": "bg-rose-50 text-rose-600",
+        "中": "bg-amber-50 text-amber-600",
+        "低": "bg-emerald-50 text-emerald-600"
+      };
+      return styles[priority] || "bg-slate-100 text-slate-600";
+    }
+
+    function getScopedLeads() {
+      if (!canViewLead) return [];
+      if (leadDataScope !== "仅自己") return [...leads];
+      return leads.filter((lead) => lead.owner === currentSession.userName);
+    }
+
+    function getLeadById(leadId) {
+      return getScopedLeads().find((lead) => lead.id === leadId);
+    }
+
+    function getFilteredOwnerOptions() {
+      const keyword = filterOwner.value.trim();
+      return ownerFilterOptions.filter((owner) => owner.includes(keyword));
+    }
+
+    function renderOwnerDropdown() {
+      const matchedOwners = getFilteredOwnerOptions();
+
+      filterOwnerDropdown.innerHTML = matchedOwners.length
+        ? matchedOwners.map((owner) => `
+            <button
+              type="button"
+              data-owner="${escapeHtml(owner)}"
+              class="block w-full px-4 py-2 text-left text-sm text-slate-700 transition-colors duration-200 hover:bg-brand-50 hover:text-brand-700"
+            >
+              ${escapeHtml(owner)}
+            </button>
+          `).join("")
+        : '<div class="px-4 py-2 text-sm text-slate-400">未找到匹配的跟进人</div>';
+    }
+
+    function openOwnerDropdown() {
+      ownerDropdownOpen = true;
+      renderOwnerDropdown();
+      filterOwnerDropdown.classList.remove("hidden");
+      toggleOwnerDropdownIcon.classList.add("rotate-180");
+    }
+
+    function closeOwnerDropdown() {
+      ownerDropdownOpen = false;
+      filterOwnerDropdown.classList.add("hidden");
+      toggleOwnerDropdownIcon.classList.remove("rotate-180");
+    }
+
+    function populateFilterOptions() {
+      const currentSourceValue = filterSource.value || "全部";
+      const currentLeadSourceValue = leadSource.value || "";
+      const currentLeadOwnerValue = leadOwner.value || "";
+
+      const scopedLeads = getScopedLeads();
+      const sources = [...new Set(scopedLeads.map((lead) => lead.source).filter(Boolean))];
+      const owners = [...new Set(scopedLeads.map((lead) => lead.owner).filter(Boolean))];
+      ownerFilterOptions = owners;
+
+      filterSource.innerHTML = [
+        '<option value="全部">全部</option>',
+        ...sources.map((source) => `<option value="${escapeHtml(source)}">${escapeHtml(source)}</option>`)
+      ].join("");
+
+      leadSource.innerHTML = [
+        '<option value="">请选择客户来源</option>',
+        ...sources.map((source) => `<option value="${escapeHtml(source)}">${escapeHtml(source)}</option>`)
+      ].join("");
+
+      leadOwner.innerHTML = [
+        '<option value="">请选择跟进人</option>',
+        ...owners.map((owner) => `<option value="${escapeHtml(owner)}">${escapeHtml(owner)}</option>`)
+      ].join("");
+      filterSource.value = sources.includes(currentSourceValue) ? currentSourceValue : "全部";
+      leadSource.value = sources.includes(currentLeadSourceValue) ? currentLeadSourceValue : "";
+      leadOwner.value = owners.includes(currentLeadOwnerValue) ? currentLeadOwnerValue : "";
+
+      if (ownerDropdownOpen) {
+        renderOwnerDropdown();
+      }
+    }
+
+    function getTimelineHtml(lead) {
+      if (!lead.followUps || !lead.followUps.length) {
+        return `
+          <div class="rounded-xl border border-dashed border-slate-300 bg-[#f6fbf7] px-4 py-5 text-sm text-slate-500">
+            暂无跟进记录，可点击“跟进”补充本次沟通内容。
+          </div>
+        `;
+      }
+
+      return lead.followUps
+        .slice()
+        .reverse()
+        .map((item) => `
+          <div class="rounded-xl border border-slate-200 bg-[#f6fbf7] px-4 py-4">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <span class="text-sm font-semibold text-slate-900">${escapeHtml(item.by)}</span>
+              <span class="text-xs text-slate-500">${escapeHtml(item.time)}</span>
+            </div>
+            <p class="mt-2 text-sm leading-6 text-slate-600">${escapeHtml(item.note)}</p>
+          </div>
+        `)
+        .join("");
+    }
+
+    function openOverlay(modalElement) {
+      modalElement.classList.remove("hidden");
+      modalElement.classList.add("flex");
+      document.body.classList.add("modal-open");
+    }
+
+    function closeOverlay(modalElement) {
+      modalElement.classList.add("hidden");
+      modalElement.classList.remove("flex");
+      const hasVisibleModal = [leadModal, viewLeadModal, followLeadModal].some(
+        (modal) => !modal.classList.contains("hidden")
+      );
+      if (!hasVisibleModal) {
+        document.body.classList.remove("modal-open");
+      }
+    }
+
+    function closeAllPopups() {
+      closeOverlay(leadModal);
+      closeOverlay(viewLeadModal);
+      closeOverlay(followLeadModal);
+      closeOwnerDropdown();
+    }
+
+    function updateStats() {
+      const scopedLeads = getScopedLeads();
+      heroLeadCount.textContent = scopedLeads.length.toLocaleString("zh-CN");
+      heroPendingLeadCount.textContent = String(
+        scopedLeads.filter((lead) => !lead.followUps || !lead.followUps.length).length
+      );
+      filteredBadge.textContent = `搜索结果共 ${filteredLeads.length} 条`;
+    }
+
+    function updatePagination(totalItems) {
+      const totalPages = Math.max(1, Math.ceil(totalItems / pageSize));
+      currentPage = Math.min(currentPage, totalPages);
+      pageIndicator.textContent = `第 ${currentPage} / ${totalPages} 页`;
+      prevPageButton.disabled = currentPage === 1 || totalItems === 0;
+      nextPageButton.disabled = currentPage === totalPages || totalItems === 0;
+    }
+
+    function renderLeads() {
+      if (!canViewLead) {
+        leadTableBody.innerHTML = `
+          <tr>
+            <td colspan="8" class="border-t border-b border-slate-100 px-6 py-10 text-center text-sm text-slate-500">
+              当前角色暂无线索查看权限。
+            </td>
+          </tr>
+        `;
+        tableSummary.textContent = "共 0 条线索，当前展示 0 条";
+        updateStats();
+        return;
+      }
+
+      const totalItems = filteredLeads.length;
+      updatePagination(totalItems);
+
+      if (!filteredLeads.length) {
+        leadTableBody.innerHTML = `
+          <tr>
+            <td colspan="8" class="border-t border-b border-slate-100 px-6 py-10 text-center text-sm text-slate-500">
+              未查询到符合条件的线索，请调整筛选条件后重试。
+            </td>
+          </tr>
+        `;
+        tableSummary.textContent = `共 ${getScopedLeads().length} 条线索，当前展示 0 条`;
+        updateStats();
+        return;
+      }
+
+      const startIndex = (currentPage - 1) * pageSize;
+      const paginatedLeads = filteredLeads.slice(startIndex, startIndex + pageSize);
+      const endIndex = startIndex + paginatedLeads.length;
+
+      leadTableBody.innerHTML = paginatedLeads.map((lead, index) => {
+        const borderClass = index === paginatedLeads.length - 1 ? "border-t border-b" : "border-t";
+        return `
+          <tr class="transition-colors duration-200 hover:bg-brand-50/40">
+            <td class="${borderClass} border-slate-100 px-6 py-4 text-center text-sm font-semibold text-slate-800">${escapeHtml(lead.id)}</td>
+            <td class="${borderClass} border-slate-100 px-6 py-4 text-center text-sm text-slate-600">${escapeHtml(lead.createdAt)}</td>
+            <td class="${borderClass} border-slate-100 px-6 py-4 text-center text-sm text-slate-800">${escapeHtml(lead.name)}</td>
+            <td class="${borderClass} border-slate-100 px-6 py-4 text-center text-sm text-slate-600">${escapeHtml(lead.phone)}</td>
+            <td class="${borderClass} border-slate-100 px-6 py-4 text-center">
+              <span class="rounded-full px-3 py-1 text-xs font-semibold ${getPriorityBadge(lead.priority)}">${escapeHtml(lead.priority)}</span>
+            </td>
+            <td class="${borderClass} border-slate-100 px-6 py-4 text-center text-sm text-slate-600">${escapeHtml(lead.source)}</td>
+            <td class="${borderClass} border-slate-100 px-6 py-4 text-center text-sm text-slate-800">${escapeHtml(lead.owner)}</td>
+            <td class="${borderClass} border-slate-100 px-6 py-4 text-center">
+              <div class="flex justify-center gap-2">
+                ${canViewLead ? `<button data-action="view" data-id="${escapeHtml(lead.id)}" class="cursor-pointer rounded-xl border border-slate-200 px-3 py-2 text-sm font-medium text-slate-700 transition-colors duration-200 hover:border-brand-200 hover:bg-brand-50 hover:text-brand-600">查看</button>` : ""}
+                ${canEditLead ? `<button data-action="follow" data-id="${escapeHtml(lead.id)}" class="cursor-pointer rounded-xl bg-brand-500 px-3 py-2 text-sm font-medium text-white transition-colors duration-200 hover:bg-brand-600">跟进</button>` : ""}
+                ${!canViewLead && !canEditLead ? `<span class="text-sm text-slate-400">--</span>` : ""}
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join("");
+
+      tableSummary.textContent = `共 ${getScopedLeads().length} 条线索，当前展示 ${startIndex + 1} - ${endIndex} 条`;
+      updateStats();
+    }
+
+    function applyFilters() {
+      const dateValue = filterDate.value.trim();
+      const nameValue = filterName.value.trim();
+      const phoneValue = filterPhone.value.trim();
+      const priorityValue = filterPriority.value;
+      const sourceValue = filterSource.value;
+      const ownerValue = filterOwner.value.trim();
+
+      filteredLeads = getScopedLeads().filter((lead) => {
+        const matchesDate = !dateValue || lead.createdAt.startsWith(dateValue);
+        const matchesName = !nameValue || lead.name.includes(nameValue);
+        const matchesPhone = !phoneValue || lead.phone.includes(phoneValue);
+        const matchesPriority = priorityValue === "全部" || lead.priority === priorityValue;
+        const matchesSource = sourceValue === "全部" || lead.source === sourceValue;
+        const matchesOwner = !ownerValue || lead.owner.includes(ownerValue);
+        return matchesDate && matchesName && matchesPhone && matchesPriority && matchesSource && matchesOwner;
+      });
+
+      currentPage = 1;
+      closeOwnerDropdown();
+      renderLeads();
+    }
+
+    function resetFilters() {
+      filterDate.value = "";
+      filterName.value = "";
+      filterPhone.value = "";
+      filterPriority.value = "全部";
+      filterSource.value = "全部";
+      filterOwner.value = "";
+      filteredLeads = [...getScopedLeads()];
+      currentPage = 1;
+      closeOwnerDropdown();
+      renderLeads();
+    }
+
+    function formatDateTime(date) {
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const day = String(date.getDate()).padStart(2, "0");
+      const hours = String(date.getHours()).padStart(2, "0");
+      const minutes = String(date.getMinutes()).padStart(2, "0");
+      return `${year}-${month}-${day} ${hours}:${minutes}`;
+    }
+
+    function generateLeadId() {
+      const now = new Date();
+      const datePart = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, "0")}${String(now.getDate()).padStart(2, "0")}`;
+      const sequence = String(leads.length + 1).padStart(3, "0");
+      return `LS${datePart}${sequence}`;
+    }
+
+    function openModal() {
+      if (!canAddLead) return;
+      openOverlay(leadModal);
+      leadName.focus();
+    }
+
+    function closeModal() {
+      closeOverlay(leadModal);
+      leadForm.reset();
+      leadPriority.value = "中";
+      leadSource.value = "";
+      leadOwner.value = "";
+    }
+
+    function openViewModal(leadId) {
+      if (!canViewLead) return;
+      const lead = getLeadById(leadId);
+      if (!lead) return;
+
+      activeLeadId = leadId;
+      viewLeadId.value = lead.id;
+      viewLeadCreatedAt.value = lead.createdAt;
+      viewLeadName.value = lead.name;
+      viewLeadPhone.value = lead.phone;
+      viewLeadPriority.value = lead.priority;
+      viewLeadSource.value = lead.source;
+      viewLeadOwner.value = lead.owner;
+      viewLeadName.readOnly = !canEditLead;
+      viewLeadPhone.readOnly = !canEditLead;
+      viewLeadPriority.disabled = !canEditLead;
+      viewLeadSource.disabled = !canEditLead;
+      viewLeadOwner.disabled = !canEditLead;
+      if (viewLeadSubmitButton) {
+        viewLeadSubmitButton.classList.toggle("hidden", !canEditLead);
+      }
+      viewLeadTimeline.innerHTML = getTimelineHtml(lead);
+      openOverlay(viewLeadModal);
+    }
+
+    function closeViewModal() {
+      closeOverlay(viewLeadModal);
+      viewLeadForm.reset();
+    }
+
+    function openFollowModal(leadId) {
+      if (!canEditLead) return;
+      const lead = getLeadById(leadId);
+      if (!lead) return;
+
+      activeLeadId = leadId;
+      followLeadSubtitle.textContent = `正在为 ${lead.name} 记录沟通结果与下一步计划。`;
+      followLeadMeta.innerHTML = `
+        <div class="flex flex-wrap items-center gap-x-6 gap-y-2">
+          <span><span class="text-slate-400">线索编号：</span>${escapeHtml(lead.id)}</span>
+          <span><span class="text-slate-400">客户姓名：</span>${escapeHtml(lead.name)}</span>
+          <span><span class="text-slate-400">联系电话：</span>${escapeHtml(lead.phone)}</span>
+          <span><span class="text-slate-400">当前跟进人：</span>${escapeHtml(lead.owner)}</span>
+        </div>
+      `;
+      followHistory.innerHTML = getTimelineHtml(lead);
+      followNote.value = "";
+      openOverlay(followLeadModal);
+      followNote.focus();
+    }
+
+    function closeFollowModal() {
+      closeOverlay(followLeadModal);
+      followForm.reset();
+    }
+
+    openModalButton.addEventListener("click", openModal);
+    closeModalButton.addEventListener("click", closeModal);
+    cancelModalButton.addEventListener("click", closeModal);
+    closeViewModalButton.addEventListener("click", closeViewModal);
+    cancelViewModalButton.addEventListener("click", closeViewModal);
+    closeFollowModalButton.addEventListener("click", closeFollowModal);
+    cancelFollowModalButton.addEventListener("click", closeFollowModal);
+    queryButton.addEventListener("click", applyFilters);
+    resetButton.addEventListener("click", resetFilters);
+    filterOwner.addEventListener("input", openOwnerDropdown);
+    toggleOwnerDropdownButton.addEventListener("click", () => {
+      if (ownerDropdownOpen) {
+        closeOwnerDropdown();
+      } else {
+        openOwnerDropdown();
+        filterOwner.focus();
+      }
+    });
+    filterOwnerDropdown.addEventListener("click", (event) => {
+      const optionButton = event.target.closest("button[data-owner]");
+      if (!optionButton) return;
+      filterOwner.value = optionButton.dataset.owner || "";
+      closeOwnerDropdown();
+    });
+    prevPageButton.addEventListener("click", () => {
+      if (currentPage > 1) {
+        currentPage -= 1;
+        renderLeads();
+      }
+    });
+    nextPageButton.addEventListener("click", () => {
+      const totalPages = Math.max(1, Math.ceil(filteredLeads.length / pageSize));
+      if (currentPage < totalPages) {
+        currentPage += 1;
+        renderLeads();
+      }
+    });
+
+    leadTableBody.addEventListener("click", (event) => {
+      const actionButton = event.target.closest("button[data-action]");
+      if (!actionButton) return;
+
+      const { action, id } = actionButton.dataset;
+      if (action === "view") {
+        openViewModal(id);
+      }
+      if (action === "follow") {
+        openFollowModal(id);
+      }
+    });
+
+    leadModal.addEventListener("click", (event) => {
+      if (event.target === leadModal) {
+        closeModal();
+      }
+    });
+
+    viewLeadModal.addEventListener("click", (event) => {
+      if (event.target === viewLeadModal) {
+        closeViewModal();
+      }
+    });
+
+    followLeadModal.addEventListener("click", (event) => {
+      if (event.target === followLeadModal) {
+        closeFollowModal();
+      }
+    });
+    document.addEventListener("click", (event) => {
+      if (!filterOwnerContainer.contains(event.target)) {
+        closeOwnerDropdown();
+      }
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") {
+        closeAllPopups();
+      }
+    });
+
+    leadForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+      if (!canAddLead) return;
+
+      const newLead = {
+        id: generateLeadId(),
+        createdAt: formatDateTime(new Date()),
+        name: leadName.value.trim(),
+        phone: leadPhone.value.trim(),
+        priority: leadPriority.value,
+        source: leadSource.value.trim(),
+        owner: leadOwner.value.trim()
+      };
+
+      leads.unshift(newLead);
+      populateFilterOptions();
+      closeModal();
+      applyFilters();
+    });
+
+    viewLeadForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+      if (!canEditLead) return;
+
+      const lead = getLeadById(activeLeadId);
+      if (!lead) return;
+
+      lead.name = viewLeadName.value.trim();
+      lead.phone = viewLeadPhone.value.trim();
+      lead.priority = viewLeadPriority.value;
+      lead.source = viewLeadSource.value.trim();
+      lead.owner = viewLeadOwner.value.trim();
+
+      populateFilterOptions();
+      viewLeadTimeline.innerHTML = getTimelineHtml(lead);
+      closeViewModal();
+      applyFilters();
+    });
+
+    followForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+      if (!canEditLead) return;
+
+      const lead = getLeadById(activeLeadId);
+      const note = followNote.value.trim();
+      if (!lead || !note) return;
+
+      if (!Array.isArray(lead.followUps)) {
+        lead.followUps = [];
+      }
+
+      lead.followUps.push({
+        time: formatDateTime(new Date()),
+        note,
+        by: lead.owner
+      });
+
+      followHistory.innerHTML = getTimelineHtml(lead);
+      if (!viewLeadModal.classList.contains("hidden") && activeLeadId === lead.id) {
+        viewLeadTimeline.innerHTML = getTimelineHtml(lead);
+      }
+      closeFollowModal();
+    });
+
+    openModalButton.classList.toggle("hidden", !canAddLead);
+    if (viewLeadSubmitButton) {
+      viewLeadSubmitButton.classList.toggle("hidden", !canEditLead);
+    }
+    filteredLeads = [...getScopedLeads()];
+    populateFilterOptions();
+    renderLeads();
+  </script>
+</body>
+</html>

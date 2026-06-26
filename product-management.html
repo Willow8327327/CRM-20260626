@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>商品管理 - 邮储文询客智中枢</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: "#f4fcf7",
+              100: "#e6f8ed",
+              200: "#caeed9",
+              300: "#a6dfbf",
+              400: "#7fcd9f",
+              500: "#58b67e",
+              600: "#3f9f68",
+              700: "#338353",
+              800: "#2f6c47",
+              900: "#28563a"
+            }
+          },
+          boxShadow: {
+            soft: "0 6px 18px rgba(63, 159, 104, 0.07)",
+            panel: "0 3px 10px rgba(63, 159, 104, 0.05)"
+          },
+          backgroundImage: {
+            "hero-glow": "linear-gradient(180deg, rgba(88,182,126,0.08) 0%, rgba(255,255,255,0) 24%)"
+          }
+        }
+      }
+    };
+  </script>
+  <script src="./auth.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      font-family: "Inter", "PingFang SC", "Microsoft YaHei", sans-serif;
+    }
+
+    .glass {
+      background: #ffffff;
+      border: 1px solid #e1eee6;
+    }
+
+    .modal-open {
+      overflow: hidden;
+    }
+
+    .bank-divider {
+      position: relative;
+      padding-left: 14px;
+    }
+
+    .bank-divider::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 4px;
+      height: 18px;
+      border-radius: 999px;
+      background: #58b67e;
+    }
+  </style>
+</head>
+<body class="min-h-screen bg-[#fbfefd] bg-hero-glow text-slate-800">
+  <div class="flex min-h-screen">
+    <aside class="w-full max-w-[272px] border-r border-[#d8e9de] bg-[#f7faf8] px-5 py-6 text-slate-800">
+      <div class="mb-10 flex items-center gap-3">
+        <div class="flex h-[52px] w-[52px] items-center justify-center rounded-2xl border border-slate-200 bg-white shadow-panel">
+          <img
+            src="file:///C:/Users/123/.cursor/projects/f-CRM/assets/c__Users_123_AppData_Roaming_Cursor_User_workspaceStorage_empty-window_images_fW2Zi8ZvH-0bd9f079-3bf4-4ba7-ba15-c678011f227c.png"
+            alt="中国邮政储蓄银行标志"
+            class="h-[35px] w-[35px] object-contain"
+          />
+        </div>
+        <div class="min-w-0">
+          <p class="text-xs uppercase tracking-[0.28em] text-brand-500/70">i-QCustAgent</p>
+          <h1 class="mt-1 text-lg font-semibold tracking-wide text-slate-900">邮储文询客智中枢</h1>
+        </div>
+      </div>
+
+      <div class="mb-6 rounded-2xl border border-brand-100 bg-gradient-to-r from-brand-50 to-white p-4">
+        <p class="text-sm text-brand-600">商品资料概览</p>
+        <div class="mt-3 flex items-end justify-between">
+          <div>
+            <p id="sideProductCount" class="text-3xl font-semibold text-slate-900">0</p>
+            <p id="sideProductSubtext" class="mt-1 text-xs text-slate-500">本月新增商品 0 件</p>
+          </div>
+          <span class="rounded-full border border-brand-100 bg-white px-3 py-1 text-xs font-medium text-brand-600">已同步</span>
+        </div>
+      </div>
+
+      <nav class="space-y-2">
+        <a href="dashboard.html" class="flex cursor-pointer items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-slate-700 transition-colors duration-200 hover:bg-brand-50 hover:text-brand-700">
+          <svg class="h-5 w-5 text-brand-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 19h16M7 16V9m5 7V5m5 11v-6" />
+          </svg>
+          数据仪表盘
+        </a>
+        <a href="crm-leads.html" class="flex cursor-pointer items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-slate-700 transition-colors duration-200 hover:bg-brand-50 hover:text-brand-700">
+          <svg class="h-5 w-5 text-brand-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 7h16M4 12h10M4 17h7" />
+          </svg>
+          线索管理
+        </a>
+        <a href="product-management.html" class="flex cursor-pointer items-center gap-3 rounded-xl border border-brand-100 bg-brand-500 px-4 py-3 text-sm font-semibold text-white shadow-panel transition-colors duration-200">
+          <svg class="h-5 w-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 7.5h16M6 4h12a2 2 0 0 1 2 2v12.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 18.5V6a2 2 0 0 1 2-2Zm1 7h4m-4 4h7" />
+          </svg>
+          商品管理
+        </a>
+        <a href="order-management.html" class="flex cursor-pointer items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-slate-700 transition-colors duration-200 hover:bg-brand-50 hover:text-brand-700">
+          <svg class="h-5 w-5 text-brand-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M5 6.5h14M7 4h10a2 2 0 0 1 2 2v11.5A1.5 1.5 0 0 1 17.5 19h-11A1.5 1.5 0 0 1 5 17.5V6a2 2 0 0 1 2-2Zm1 6h8m-8 4h5" />
+          </svg>
+          订单管理
+        </a>
+        <a href="role-management.html" class="flex cursor-pointer items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-slate-700 transition-colors duration-200 hover:bg-brand-50 hover:text-brand-700">
+          <svg class="h-5 w-5 text-brand-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M7 8h10M7 12h10M7 16h6M5 4h14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Z" />
+          </svg>
+          角色与权限管理
+        </a>
+        <a href="customer-management.html" class="flex cursor-pointer items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-slate-700 transition-colors duration-200 hover:bg-brand-50 hover:text-brand-700">
+          <svg class="h-5 w-5 text-brand-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 7h12M6 12h12M6 17h7M5 4h14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Zm2 0v16" />
+          </svg>
+          账号管理
+        </a>
+      </nav>
+
+      <div class="mt-10 rounded-2xl border border-slate-200 bg-white p-4 shadow-panel">
+        <p class="text-sm font-medium text-slate-900">商品运营提醒</p>
+        <p class="mt-2 text-sm leading-6 text-slate-500">建议优先核对高价值商品价格与命名规范，保持商品档案信息一致。</p>
+      </div>
+    </aside>
+
+    <main class="flex-1 p-6 lg:p-7">
+      <div class="mx-auto max-w-7xl space-y-6">
+        <header class="glass overflow-hidden rounded-2xl p-6 shadow-soft">
+          <div class="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
+            <div>
+              <p class="text-sm font-medium text-brand-600">商品管理</p>
+              <h2 class="mt-2 text-3xl font-semibold tracking-tight text-slate-900">统一管理商品资料，提升产品运营与维护效率</h2>
+              <p class="mt-3 max-w-3xl text-sm leading-6 text-slate-600">完全参考线索管理页面样式与交互节奏，支持商品筛选、详情查看、资料修改、新增录入与删除确认。</p>
+            </div>
+            <div class="grid grid-cols-2 gap-3 sm:grid-cols-3">
+              <div class="rounded-xl border border-slate-200 bg-[#fbfefb] px-4 py-3 shadow-panel">
+                <p class="text-xs text-slate-500">商品总数</p>
+                <p id="heroProductCount" class="mt-1 text-xl font-semibold text-slate-900">0</p>
+              </div>
+              <div class="rounded-xl border border-slate-200 bg-[#fbfefb] px-4 py-3 shadow-panel">
+                <p class="text-xs text-slate-500">平均单价</p>
+                <p id="heroProductAveragePrice" class="mt-1 text-xl font-semibold text-brand-600">¥0.00</p>
+              </div>
+              <div class="rounded-xl border border-slate-200 bg-[#fbfefb] px-4 py-3 shadow-panel">
+                <p class="text-xs text-slate-500">高价值商品</p>
+                <p id="heroProductHighValueCount" class="mt-1 text-xl font-semibold text-brand-600">0</p>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <section class="glass rounded-2xl p-6 shadow-soft">
+          <div class="flex flex-col gap-4 border-b border-slate-200 pb-5 lg:flex-row lg:items-start lg:justify-between">
+            <div>
+              <h3 class="bank-divider text-lg font-semibold text-slate-900">筛选条件</h3>
+              <p class="mt-1 text-sm text-slate-500">支持按商品创建时间、商品编号和商品名称快速筛选目标商品。</p>
+            </div>
+            <button id="openAddProductModalButton" type="button" class="inline-flex cursor-pointer items-center justify-center gap-2 rounded-xl bg-brand-500 px-5 py-3 text-sm font-semibold text-white shadow-panel transition-colors duration-200 hover:bg-brand-600">
+              <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 5v14m7-7H5" />
+              </svg>
+              新增商品
+            </button>
+          </div>
+
+          <div class="mt-6 flex flex-col gap-4 xl:flex-row xl:items-end">
+            <div class="grid flex-1 grid-cols-1 gap-4 md:grid-cols-3">
+              <label class="block">
+                <span class="mb-2 block text-sm font-medium text-slate-700">商品创建时间</span>
+                <input id="productFilterDate" type="date" class="w-full rounded-xl border border-slate-300 bg-[#fcfffd] px-4 py-3 text-sm text-slate-900 outline-none transition-colors duration-200 focus:border-brand-400 focus:bg-white focus:ring-4 focus:ring-brand-50" />
+              </label>
+              <label class="block">
+                <span class="mb-2 block text-sm font-medium text-slate-700">商品编号</span>
+                <input id="productFilterCode" type="text" placeholder="请输入商品编号" class="w-full rounded-xl border border-slate-300 bg-[#fcfffd] px-4 py-3 text-sm text-slate-900 outline-none transition-colors duration-200 placeholder:text-slate-400 focus:border-brand-400 focus:bg-white focus:ring-4 focus:ring-brand-50" />
+              </label>
+              <label class="block">
+                <span class="mb-2 block text-sm font-medium text-slate-700">商品名称</span>
+                <input id="productFilterName" type="text" placeholder="请输入商品名称" class="w-full rounded-xl border border-slate-300 bg-[#fcfffd] px-4 py-3 text-sm text-slate-900 outline-none transition-colors duration-200 placeholder:text-slate-400 focus:border-brand-400 focus:bg-white focus:ring-4 focus:ring-brand-50" />
+              </label>
+            </div>
+            <div class="flex flex-wrap gap-3 xl:pb-[2px]">
+              <button id="productQueryButton" type="button" class="cursor-pointer rounded-xl bg-brand-500 px-5 py-3 text-sm font-medium text-white transition-colors duration-200 hover:bg-brand-600">查询</button>
+              <button id="productResetButton" type="button" class="cursor-pointer rounded-xl border border-brand-200 bg-white px-5 py-3 text-sm font-medium text-brand-600 transition-colors duration-200 hover:bg-brand-50">重置</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="glass rounded-2xl shadow-soft">
+          <div class="flex flex-col gap-3 border-b border-slate-200 px-6 py-5 lg:flex-row lg:items-center lg:justify-between">
+            <div>
+              <h3 class="bank-divider text-lg font-semibold text-slate-900">商品列表</h3>
+              <p class="mt-1 text-sm text-slate-500">展示商品创建时间、商品编号、商品名称和商品价格。</p>
+            </div>
+            <span id="productResultBadge" class="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-semibold text-slate-600">搜索结果共 0 条</span>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="min-w-full border-separate border-spacing-0">
+              <thead>
+                <tr class="bg-[#edf7f1] text-center">
+                  <th class="whitespace-nowrap px-6 py-4 text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">创建时间</th>
+                  <th class="whitespace-nowrap px-6 py-4 text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">商品编号</th>
+                  <th class="whitespace-nowrap px-6 py-4 text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">商品名称</th>
+                  <th class="whitespace-nowrap px-6 py-4 text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">商品价格</th>
+                  <th class="whitespace-nowrap px-6 py-4 text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">操作</th>
+                </tr>
+              </thead>
+              <tbody id="productTableBody" class="bg-white"></tbody>
+            </table>
+          </div>
+
+          <div class="flex flex-col gap-4 px-6 py-5 sm:flex-row sm:items-center sm:justify-between">
+            <p id="productTableSummary" class="text-sm text-slate-500">共 0 条商品，当前展示 0 条</p>
+            <div class="flex items-center gap-2">
+              <button id="productPrevPageButton" type="button" class="cursor-pointer rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition-colors duration-200 hover:bg-slate-50 disabled:cursor-not-allowed disabled:border-slate-100 disabled:bg-slate-50 disabled:text-slate-400">上一页</button>
+              <span id="productPageIndicator" class="rounded-xl bg-brand-500 px-4 py-2 text-sm font-medium text-white">第 1 / 1 页</span>
+              <button id="productNextPageButton" type="button" class="cursor-pointer rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition-colors duration-200 hover:bg-slate-50 disabled:cursor-not-allowed disabled:border-slate-100 disabled:bg-slate-50 disabled:text-slate-400">下一页</button>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <div id="productDrawerOverlay" class="fixed inset-0 z-40 hidden bg-slate-950/30">
+    <div class="ml-auto flex h-full w-full max-w-xl flex-col border-l border-slate-200 bg-white shadow-soft">
+      <div class="flex items-start justify-between gap-4 border-b border-slate-200 px-6 py-5">
+        <div>
+          <p class="text-sm font-medium text-brand-600">商品管理</p>
+          <h3 id="productDrawerTitle" class="mt-1 text-2xl font-semibold text-slate-900">详情抽屉</h3>
+          <p id="productDrawerDescription" class="mt-2 text-sm text-slate-500">查看当前商品详细信息。</p>
+        </div>
+        <button id="closeProductDrawerButton" type="button" class="cursor-pointer rounded-2xl border border-slate-200 p-3 text-slate-500 transition-colors duration-200 hover:bg-slate-50 hover:text-slate-700" aria-label="关闭商品抽屉">
+          <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 6l12 12M18 6L6 18" />
+          </svg>
+        </button>
+      </div>
+      <div id="productDrawerContent" class="flex-1 overflow-y-auto px-6 py-6"></div>
+    </div>
+  </div>
+
+  <div id="addProductModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-950/45 px-4">
+    <div class="w-full max-w-2xl rounded-2xl border border-slate-200 bg-white p-6 shadow-soft">
+      <div class="flex items-start justify-between gap-4">
+        <div>
+          <p class="text-sm font-medium text-brand-600">商品管理</p>
+          <h3 class="mt-1 text-2xl font-semibold text-slate-900">新增商品</h3>
+          <p class="mt-2 text-sm text-slate-500">填写商品基础信息后点击添加，数据将立即写入本地商品列表。</p>
+        </div>
+        <button id="closeAddProductModalButton" type="button" class="cursor-pointer rounded-2xl border border-slate-200 p-3 text-slate-500 transition-colors duration-200 hover:bg-slate-50 hover:text-slate-700" aria-label="关闭新增商品弹窗">
+          <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 6l12 12M18 6L6 18" />
+          </svg>
+        </button>
+      </div>
+
+      <form id="addProductForm" class="mt-6 space-y-6">
+        <div class="grid grid-cols-1 gap-4">
+          <label class="block">
+            <span class="mb-2 block text-sm font-medium text-slate-700">商品编号</span>
+            <input id="addProductCode" type="text" placeholder="请输入商品编号" class="w-full rounded-xl border border-slate-300 bg-[#fcfffd] px-4 py-3 text-sm text-slate-900 outline-none transition-colors duration-200 placeholder:text-slate-400 focus:border-brand-400 focus:bg-white focus:ring-4 focus:ring-brand-50" />
+          </label>
+          <label class="block">
+            <span class="mb-2 block text-sm font-medium text-slate-700">商品名称</span>
+            <input id="addProductName" type="text" placeholder="请输入商品名称" class="w-full rounded-xl border border-slate-300 bg-[#fcfffd] px-4 py-3 text-sm text-slate-900 outline-none transition-colors duration-200 placeholder:text-slate-400 focus:border-brand-400 focus:bg-white focus:ring-4 focus:ring-brand-50" />
+          </label>
+          <label class="block">
+            <span class="mb-2 block text-sm font-medium text-slate-700">商品价格</span>
+            <input id="addProductPrice" type="number" placeholder="请输入商品价格" class="w-full rounded-xl border border-slate-300 bg-[#fcfffd] px-4 py-3 text-sm text-slate-900 outline-none transition-colors duration-200 placeholder:text-slate-400 focus:border-brand-400 focus:bg-white focus:ring-4 focus:ring-brand-50" />
+          </label>
+        </div>
+        <div class="flex flex-wrap justify-end gap-3">
+          <button id="cancelAddProductButton" type="button" class="cursor-pointer rounded-xl border border-slate-300 bg-white px-5 py-3 text-sm font-medium text-slate-700 transition-colors duration-200 hover:bg-slate-50">取消</button>
+          <button type="submit" class="cursor-pointer rounded-xl bg-brand-500 px-5 py-3 text-sm font-semibold text-white shadow-panel transition-colors duration-200 hover:bg-brand-600">添加商品</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="deleteProductModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-950/45 px-4">
+    <div class="w-full max-w-xl rounded-2xl border border-slate-200 bg-white p-6 shadow-soft">
+      <div class="flex items-start justify-between gap-4">
+        <div>
+          <p class="text-sm font-medium text-brand-600">商品管理</p>
+          <h3 class="mt-1 text-2xl font-semibold text-slate-900">删除确认</h3>
+          <p id="deleteProductDescription" class="mt-2 text-sm text-slate-500">确认删除当前商品吗？</p>
+        </div>
+        <button id="closeDeleteProductModalButton" type="button" class="cursor-pointer rounded-2xl border border-slate-200 p-3 text-slate-500 transition-colors duration-200 hover:bg-slate-50 hover:text-slate-700" aria-label="关闭删除确认弹窗">
+          <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 6l12 12M18 6L6 18" />
+          </svg>
+        </button>
+      </div>
+      <div class="mt-6 flex flex-wrap justify-end gap-3">
+        <button id="cancelDeleteProductButton" type="button" class="cursor-pointer rounded-xl border border-slate-300 bg-white px-5 py-3 text-sm font-medium text-slate-700 transition-colors duration-200 hover:bg-slate-50">取消</button>
+        <button id="confirmDeleteProductButton" type="button" class="cursor-pointer rounded-xl bg-rose-500 px-5 py-3 text-sm font-semibold text-white transition-colors duration-200 hover:bg-rose-600">确认删除</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const currentSession = window.CRMAuth.requireAuth();
+    window.CRMAuth.applyNavigationPermissions();
+    window.CRMAuth.requirePageAccess("商品管理");
+    const productPageName = "商品管理";
+    const canViewProduct = window.CRMAuth.canUseAction(productPageName, "查看");
+    const canAddProduct = window.CRMAuth.canUseAction(productPageName, "增加");
+    const canEditProduct = window.CRMAuth.canUseAction(productPageName, "修改");
+    const canDeleteProduct = window.CRMAuth.canUseAction(productPageName, "删除");
+    const productDataScope = window.CRMAuth.getDataScope(productPageName);
+
+    const products = [
+      { id: "SP20260618001", createdAt: "2026-06-18 09:08", code: "PRD-1001", name: "企业收款云终端", price: 2680, owner: "李思远" },
+      { id: "SP20260618002", createdAt: "2026-06-18 10:16", code: "PRD-1002", name: "智慧对账服务包", price: 1299, owner: "周可" },
+      { id: "SP20260618003", createdAt: "2026-06-18 11:02", code: "PRD-1003", name: "企业资金监管组件", price: 4580, owner: "赵嘉琪" },
+      { id: "SP20260618004", createdAt: "2026-06-18 13:24", code: "PRD-1004", name: "商户经营分析看板", price: 1999, owner: "孙明哲" },
+      { id: "SP20260618005", createdAt: "2026-06-18 15:10", code: "PRD-1005", name: "门店会员营销工具", price: 880, owner: "何嘉乐" },
+      { id: "SP20260618006", createdAt: "2026-06-19 09:45", code: "PRD-1006", name: "企业客户营销引擎", price: 3250, owner: "李思远" }
+    ];
+
+    let filteredProducts = [...products];
+    let currentPage = 1;
+    let currentProductId = null;
+    const pageSize = 5;
+
+    const sideProductCount = document.getElementById("sideProductCount");
+    const sideProductSubtext = document.getElementById("sideProductSubtext");
+    const heroProductCount = document.getElementById("heroProductCount");
+    const heroProductAveragePrice = document.getElementById("heroProductAveragePrice");
+    const heroProductHighValueCount = document.getElementById("heroProductHighValueCount");
+    const productResultBadge = document.getElementById("productResultBadge");
+    const productTableBody = document.getElementById("productTableBody");
+    const productTableSummary = document.getElementById("productTableSummary");
+    const productPrevPageButton = document.getElementById("productPrevPageButton");
+    const productNextPageButton = document.getElementById("productNextPageButton");
+    const productPageIndicator = document.getElementById("productPageIndicator");
+    const productFilterDate = document.getElementById("productFilterDate");
+    const productFilterCode = document.getElementById("productFilterCode");
+    const productFilterName = document.getElementById("productFilterName");
+    const productQueryButton = document.getElementById("productQueryButton");
+    const productResetButton = document.getElementById("productResetButton");
+    const productDrawerOverlay = document.getElementById("productDrawerOverlay");
+    const productDrawerTitle = document.getElementById("productDrawerTitle");
+    const productDrawerDescription = document.getElementById("productDrawerDescription");
+    const productDrawerContent = document.getElementById("productDrawerContent");
+    const closeProductDrawerButton = document.getElementById("closeProductDrawerButton");
+    const openAddProductModalButton = document.getElementById("openAddProductModalButton");
+    const addProductModal = document.getElementById("addProductModal");
+    const closeAddProductModalButton = document.getElementById("closeAddProductModalButton");
+    const cancelAddProductButton = document.getElementById("cancelAddProductButton");
+    const addProductForm = document.getElementById("addProductForm");
+    const addProductCode = document.getElementById("addProductCode");
+    const addProductName = document.getElementById("addProductName");
+    const addProductPrice = document.getElementById("addProductPrice");
+    const deleteProductModal = document.getElementById("deleteProductModal");
+    const deleteProductDescription = document.getElementById("deleteProductDescription");
+    const closeDeleteProductModalButton = document.getElementById("closeDeleteProductModalButton");
+    const cancelDeleteProductButton = document.getElementById("cancelDeleteProductButton");
+    const confirmDeleteProductButton = document.getElementById("confirmDeleteProductButton");
+
+    function escapeHtml(value) {
+      return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+    }
+
+    function formatPrice(price) {
+      return `¥${Number(price).toFixed(2)}`;
+    }
+
+    function formatNow() {
+      const now = new Date();
+      const year = now.getFullYear();
+      const month = String(now.getMonth() + 1).padStart(2, "0");
+      const day = String(now.getDate()).padStart(2, "0");
+      const hours = String(now.getHours()).padStart(2, "0");
+      const minutes = String(now.getMinutes()).padStart(2, "0");
+      return `${year}-${month}-${day} ${hours}:${minutes}`;
+    }
+
+    function getProductById(id) {
+      return getScopedProducts().find((product) => product.id === id) || null;
+    }
+
+    function getScopedProducts() {
+      if (!canViewProduct) return [];
+      if (productDataScope !== "仅自己") return [...products];
+      return products.filter((product) => product.owner === currentSession.userName);
+    }
+
+    function generateProductId() {
+      const now = new Date();
+      const datePart = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, "0")}${String(now.getDate()).padStart(2, "0")}`;
+      return `SP${datePart}${String(products.length + 1).padStart(3, "0")}`;
+    }
+
+    function updateStats() {
+      const scopedProducts = getScopedProducts();
+      const totalPrice = scopedProducts.reduce((sum, product) => sum + product.price, 0);
+      const averagePrice = scopedProducts.length ? totalPrice / scopedProducts.length : 0;
+      const highValueCount = scopedProducts.filter((product) => product.price >= 2000).length;
+      heroProductCount.textContent = String(scopedProducts.length);
+      heroProductAveragePrice.textContent = formatPrice(averagePrice);
+      heroProductHighValueCount.textContent = String(highValueCount);
+      sideProductCount.textContent = String(scopedProducts.length);
+      sideProductSubtext.textContent = `本月新增商品 ${Math.max(0, scopedProducts.length - 1)} 件`;
+      productResultBadge.textContent = `搜索结果共 ${filteredProducts.length} 条`;
+    }
+
+    function updatePagination(totalItems) {
+      const totalPages = Math.max(1, Math.ceil(totalItems / pageSize));
+      currentPage = Math.min(currentPage, totalPages);
+      productPageIndicator.textContent = `第 ${currentPage} / ${totalPages} 页`;
+      productPrevPageButton.disabled = currentPage === 1 || totalItems === 0;
+      productNextPageButton.disabled = currentPage === totalPages || totalItems === 0;
+    }
+
+    function renderProducts() {
+      if (!canViewProduct) {
+        productTableBody.innerHTML = `
+          <tr>
+            <td colspan="5" class="border-t border-b border-slate-100 px-6 py-10 text-center text-sm text-slate-500">
+              当前角色暂无商品查看权限。
+            </td>
+          </tr>
+        `;
+        productTableSummary.textContent = "共 0 条商品，当前展示 0 条";
+        updateStats();
+        return;
+      }
+
+      const totalItems = filteredProducts.length;
+      updatePagination(totalItems);
+
+      if (!filteredProducts.length) {
+        productTableBody.innerHTML = `
+          <tr>
+            <td colspan="5" class="border-t border-b border-slate-100 px-6 py-10 text-center text-sm text-slate-500">
+              未查询到符合条件的商品，请调整筛选条件后重试。
+            </td>
+          </tr>
+        `;
+        productTableSummary.textContent = `共 ${getScopedProducts().length} 条商品，当前展示 0 条`;
+        updateStats();
+        return;
+      }
+
+      const startIndex = (currentPage - 1) * pageSize;
+      const pageProducts = filteredProducts.slice(startIndex, startIndex + pageSize);
+      const endIndex = startIndex + pageProducts.length;
+
+      productTableBody.innerHTML = pageProducts.map((product, index) => {
+        const borderClass = index === pageProducts.length - 1 ? "border-t border-b" : "border-t";
+        return `
+          <tr class="transition-colors duration-200 hover:bg-brand-50/40">
+            <td class="${borderClass} border-slate-100 px-6 py-4 text-center text-sm text-slate-600">${escapeHtml(product.createdAt)}</td>
+            <td class="${borderClass} border-slate-100 px-6 py-4 text-center text-sm font-semibold text-slate-800">${escapeHtml(product.code)}</td>
+            <td class="${borderClass} border-slate-100 px-6 py-4 text-center text-sm text-slate-800">${escapeHtml(product.name)}</td>
+            <td class="${borderClass} border-slate-100 px-6 py-4 text-center text-sm font-semibold text-brand-600">${escapeHtml(formatPrice(product.price))}</td>
+            <td class="${borderClass} border-slate-100 px-6 py-4 text-center">
+              <div class="flex justify-center gap-2">
+                ${canViewProduct ? `<button data-action="detail" data-id="${escapeHtml(product.id)}" class="cursor-pointer rounded-xl border border-slate-200 px-3 py-2 text-sm font-medium text-slate-700 transition-colors duration-200 hover:border-brand-200 hover:bg-brand-50 hover:text-brand-600">详情</button>` : ""}
+                ${canEditProduct ? `<button data-action="edit" data-id="${escapeHtml(product.id)}" class="cursor-pointer rounded-xl bg-brand-500 px-3 py-2 text-sm font-medium text-white transition-colors duration-200 hover:bg-brand-600">修改</button>` : ""}
+                ${canDeleteProduct ? `<button data-action="delete" data-id="${escapeHtml(product.id)}" class="cursor-pointer rounded-xl border border-rose-200 bg-rose-50 px-3 py-2 text-sm font-medium text-rose-600 transition-colors duration-200 hover:bg-rose-100">删除</button>` : ""}
+                ${!canViewProduct && !canEditProduct && !canDeleteProduct ? `<span class="text-sm text-slate-400">--</span>` : ""}
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join("");
+
+      productTableSummary.textContent = `共 ${getScopedProducts().length} 条商品，当前展示 ${startIndex + 1} - ${endIndex} 条`;
+      updateStats();
+    }
+
+    function applyFilters() {
+      const dateValue = productFilterDate.value.trim();
+      const codeValue = productFilterCode.value.trim();
+      const nameValue = productFilterName.value.trim();
+
+      filteredProducts = getScopedProducts().filter((product) => {
+        const matchesDate = !dateValue || product.createdAt.startsWith(dateValue);
+        const matchesCode = !codeValue || product.code.includes(codeValue);
+        const matchesName = !nameValue || product.name.includes(nameValue);
+        return matchesDate && matchesCode && matchesName;
+      });
+
+      currentPage = 1;
+      renderProducts();
+    }
+
+    function resetFilters() {
+      productFilterDate.value = "";
+      productFilterCode.value = "";
+      productFilterName.value = "";
+      filteredProducts = [...getScopedProducts()];
+      currentPage = 1;
+      renderProducts();
+    }
+
+    function openOverlay(element, displayClass) {
+      element.classList.remove("hidden");
+      if (displayClass) {
+        element.classList.add(displayClass);
+      }
+      document.body.classList.add("modal-open");
+    }
+
+    function closeOverlay(element, displayClass) {
+      element.classList.add("hidden");
+      if (displayClass) {
+        element.classList.remove(displayClass);
+      }
+
+      if (
+        productDrawerOverlay.classList.contains("hidden") &&
+        addProductModal.classList.contains("hidden") &&
+        deleteProductModal.classList.contains("hidden")
+      ) {
+        document.body.classList.remove("modal-open");
+      }
+    }
+
+    function closeAllOverlays() {
+      closeOverlay(productDrawerOverlay);
+      closeOverlay(addProductModal, "flex");
+      closeOverlay(deleteProductModal, "flex");
+    }
+
+    function renderReadonlyField(label, value) {
+      return `
+        <label class="block">
+          <span class="mb-2 block text-sm font-medium text-slate-700">${escapeHtml(label)}</span>
+          <input value="${escapeHtml(value)}" readonly class="w-full cursor-not-allowed rounded-xl border border-slate-300 bg-[#f2f8f4] px-4 py-3 text-sm text-slate-500 outline-none" />
+        </label>
+      `;
+    }
+
+    function openDetailDrawer(productId) {
+      if (!canViewProduct) return;
+      const product = getProductById(productId);
+      if (!product) return;
+
+      currentProductId = product.id;
+      productDrawerTitle.textContent = "详情抽屉";
+      productDrawerDescription.textContent = "查看当前商品的详细信息。";
+      productDrawerContent.innerHTML = `
+        <div class="space-y-4">
+          ${renderReadonlyField("创建时间", product.createdAt)}
+          ${renderReadonlyField("商品编号", product.code)}
+          ${renderReadonlyField("商品名称", product.name)}
+          ${renderReadonlyField("商品价格", formatPrice(product.price))}
+        </div>
+      `;
+      openOverlay(productDrawerOverlay);
+    }
+
+    function openEditDrawer(productId) {
+      if (!canEditProduct) return;
+      const product = getProductById(productId);
+      if (!product) return;
+
+      currentProductId = product.id;
+      productDrawerTitle.textContent = "修改抽屉";
+      productDrawerDescription.textContent = "用户可以修改当前商品数据，点击保存后同步列表。";
+      productDrawerContent.innerHTML = `
+        <form id="editProductForm" class="space-y-6">
+          <div class="grid grid-cols-1 gap-4">
+            <label class="block">
+              <span class="mb-2 block text-sm font-medium text-slate-700">商品编号</span>
+              <input id="editProductCode" type="text" value="${escapeHtml(product.code)}" class="w-full rounded-xl border border-slate-300 bg-[#fcfffd] px-4 py-3 text-sm text-slate-900 outline-none transition-colors duration-200 focus:border-brand-400 focus:bg-white focus:ring-4 focus:ring-brand-50" />
+            </label>
+            <label class="block">
+              <span class="mb-2 block text-sm font-medium text-slate-700">商品名称</span>
+              <input id="editProductName" type="text" value="${escapeHtml(product.name)}" class="w-full rounded-xl border border-slate-300 bg-[#fcfffd] px-4 py-3 text-sm text-slate-900 outline-none transition-colors duration-200 focus:border-brand-400 focus:bg-white focus:ring-4 focus:ring-brand-50" />
+            </label>
+            <label class="block">
+              <span class="mb-2 block text-sm font-medium text-slate-700">商品价格</span>
+              <input id="editProductPrice" type="number" value="${escapeHtml(product.price)}" class="w-full rounded-xl border border-slate-300 bg-[#fcfffd] px-4 py-3 text-sm text-slate-900 outline-none transition-colors duration-200 focus:border-brand-400 focus:bg-white focus:ring-4 focus:ring-brand-50" />
+            </label>
+          </div>
+          <div class="flex flex-wrap justify-end gap-3">
+            <button id="cancelEditProductButton" type="button" class="cursor-pointer rounded-xl border border-slate-300 bg-white px-5 py-3 text-sm font-medium text-slate-700 transition-colors duration-200 hover:bg-slate-50">取消</button>
+            <button type="submit" class="cursor-pointer rounded-xl bg-brand-500 px-5 py-3 text-sm font-semibold text-white shadow-panel transition-colors duration-200 hover:bg-brand-600">保存修改</button>
+          </div>
+        </form>
+      `;
+
+      const editProductForm = productDrawerContent.querySelector("#editProductForm");
+      const cancelEditProductButton = productDrawerContent.querySelector("#cancelEditProductButton");
+
+      cancelEditProductButton.addEventListener("click", () => closeOverlay(productDrawerOverlay));
+      editProductForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+        const code = productDrawerContent.querySelector("#editProductCode").value.trim();
+        const name = productDrawerContent.querySelector("#editProductName").value.trim();
+        const price = Number(productDrawerContent.querySelector("#editProductPrice").value);
+        if (!code || !name || Number.isNaN(price) || price <= 0) return;
+
+        product.code = code;
+        product.name = name;
+        product.price = price;
+        closeOverlay(productDrawerOverlay);
+        applyFilters();
+      });
+
+      openOverlay(productDrawerOverlay);
+    }
+
+    function openDeleteModal(productId) {
+      if (!canDeleteProduct) return;
+      const product = getProductById(productId);
+      if (!product) return;
+      currentProductId = product.id;
+      deleteProductDescription.textContent = `确认删除商品“${product.name}”吗？确认后删除数据。`;
+      openOverlay(deleteProductModal, "flex");
+    }
+
+    function openAddModal() {
+      if (!canAddProduct) return;
+      addProductForm.reset();
+      openOverlay(addProductModal, "flex");
+    }
+
+    function createProduct() {
+      if (!canAddProduct) return;
+      const code = addProductCode.value.trim();
+      const name = addProductName.value.trim();
+      const price = Number(addProductPrice.value);
+      if (!code || !name || Number.isNaN(price) || price <= 0) return;
+
+      products.unshift({
+        id: generateProductId(),
+        createdAt: formatNow(),
+        code,
+        name,
+        price,
+        owner: currentSession.userName
+      });
+
+      closeOverlay(addProductModal, "flex");
+      applyFilters();
+    }
+
+    function deleteProduct() {
+      if (!canDeleteProduct) return;
+      const index = products.findIndex((product) => product.id === currentProductId);
+      if (index < 0) return;
+      products.splice(index, 1);
+      currentProductId = null;
+      closeOverlay(deleteProductModal, "flex");
+      closeOverlay(productDrawerOverlay);
+      applyFilters();
+    }
+
+    openAddProductModalButton.addEventListener("click", openAddModal);
+    closeAddProductModalButton.addEventListener("click", () => closeOverlay(addProductModal, "flex"));
+    cancelAddProductButton.addEventListener("click", () => closeOverlay(addProductModal, "flex"));
+    addProductForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+      createProduct();
+    });
+
+    productQueryButton.addEventListener("click", applyFilters);
+    productResetButton.addEventListener("click", resetFilters);
+    productPrevPageButton.addEventListener("click", () => {
+      if (currentPage > 1) {
+        currentPage -= 1;
+        renderProducts();
+      }
+    });
+    productNextPageButton.addEventListener("click", () => {
+      const totalPages = Math.max(1, Math.ceil(filteredProducts.length / pageSize));
+      if (currentPage < totalPages) {
+        currentPage += 1;
+        renderProducts();
+      }
+    });
+
+    productTableBody.addEventListener("click", (event) => {
+      const actionButton = event.target.closest("button[data-action][data-id]");
+      if (!actionButton) return;
+      const { action, id } = actionButton.dataset;
+      if (action === "detail") openDetailDrawer(id);
+      if (action === "edit") openEditDrawer(id);
+      if (action === "delete") openDeleteModal(id);
+    });
+
+    closeProductDrawerButton.addEventListener("click", () => closeOverlay(productDrawerOverlay));
+    productDrawerOverlay.addEventListener("click", (event) => {
+      if (event.target === productDrawerOverlay) {
+        closeOverlay(productDrawerOverlay);
+      }
+    });
+
+    closeDeleteProductModalButton.addEventListener("click", () => closeOverlay(deleteProductModal, "flex"));
+    cancelDeleteProductButton.addEventListener("click", () => closeOverlay(deleteProductModal, "flex"));
+    confirmDeleteProductButton.addEventListener("click", deleteProduct);
+    deleteProductModal.addEventListener("click", (event) => {
+      if (event.target === deleteProductModal) {
+        closeOverlay(deleteProductModal, "flex");
+      }
+    });
+
+    addProductModal.addEventListener("click", (event) => {
+      if (event.target === addProductModal) {
+        closeOverlay(addProductModal, "flex");
+      }
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") {
+        closeAllOverlays();
+      }
+    });
+
+    openAddProductModalButton.classList.toggle("hidden", !canAddProduct);
+    filteredProducts = [...getScopedProducts()];
+    renderProducts();
+  </script>
+</body>
+</html>

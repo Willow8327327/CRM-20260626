@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>数据仪表盘 - 邮储文询客智中枢</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: "#f4fcf7",
+              100: "#e6f8ed",
+              200: "#caeed9",
+              300: "#a6dfbf",
+              400: "#7fcd9f",
+              500: "#58b67e",
+              600: "#3f9f68",
+              700: "#338353",
+              800: "#2f6c47",
+              900: "#28563a"
+            }
+          },
+          boxShadow: {
+            soft: "0 6px 18px rgba(63, 159, 104, 0.07)",
+            panel: "0 3px 10px rgba(63, 159, 104, 0.05)"
+          },
+          backgroundImage: {
+            "hero-glow": "linear-gradient(180deg, rgba(88,182,126,0.08) 0%, rgba(255,255,255,0) 24%)"
+          }
+        }
+      }
+    };
+  </script>
+  <script src="./auth.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    body { font-family: "Inter", "PingFang SC", "Microsoft YaHei", sans-serif; }
+    .glass { background: #ffffff; border: 1px solid #e1eee6; }
+    .bank-divider { position: relative; padding-left: 14px; }
+    .bank-divider::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 4px;
+      height: 18px;
+      border-radius: 999px;
+      background: #58b67e;
+    }
+    .bi-surface {
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.98) 0%, rgba(246,250,248,0.98) 100%),
+        radial-gradient(circle at top right, rgba(63,124,247,0.08), transparent 32%);
+    }
+    .metric-card {
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(180deg, #ffffff 0%, #f7fbf9 100%);
+    }
+    .metric-card::after {
+      content: "";
+      position: absolute;
+      inset: auto -24px -24px auto;
+      width: 90px;
+      height: 90px;
+      border-radius: 999px;
+      background: rgba(88, 182, 126, 0.08);
+    }
+    .metric-kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border-radius: 999px;
+      background: rgba(88, 182, 126, 0.1);
+      padding: 4px 10px;
+      color: #3f9f68;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .chart-panel {
+      border: 1px solid #e3ece7;
+      background: linear-gradient(180deg, rgba(255,255,255,1) 0%, rgba(249,252,250,1) 100%);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.7);
+    }
+    .chart-summary-card {
+      border: 1px solid #e6efea;
+      background: linear-gradient(180deg, #ffffff 0%, #f7faf8 100%);
+    }
+    .rank-card {
+      border: 1px solid #e6efea;
+      background: linear-gradient(180deg, #ffffff 0%, #fafcfb 100%);
+    }
+    .rank-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 28px;
+      height: 28px;
+      border-radius: 10px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #1e293b;
+      background: #f1f5f9;
+    }
+    .rank-badge.top {
+      color: #ffffff;
+      background: linear-gradient(135deg, #3f7cf7 0%, #58b67e 100%);
+    }
+  </style>
+</head>
+<body class="min-h-screen bg-[#fbfefd] bg-hero-glow text-slate-800">
+  <div class="flex min-h-screen">
+    <aside class="w-full max-w-[272px] border-r border-[#d8e9de] bg-[#f7faf8] px-5 py-6 text-slate-800">
+      <div class="mb-10 flex items-center gap-3">
+        <div class="flex h-[52px] w-[52px] items-center justify-center rounded-2xl border border-slate-200 bg-white shadow-panel">
+          <img src="file:///C:/Users/123/.cursor/projects/f-CRM/assets/c__Users_123_AppData_Roaming_Cursor_User_workspaceStorage_empty-window_images_fW2Zi8ZvH-0bd9f079-3bf4-4ba7-ba15-c678011f227c.png" alt="中国邮政储蓄银行标志" class="h-[35px] w-[35px] object-contain" />
+        </div>
+        <div class="min-w-0">
+          <p class="text-xs uppercase tracking-[0.28em] text-brand-500/70">i-QCustAgent</p>
+          <h1 class="mt-1 text-lg font-semibold tracking-wide text-slate-900">邮储文询客智中枢</h1>
+        </div>
+      </div>
+
+      <div class="mb-6 rounded-2xl border border-brand-100 bg-gradient-to-r from-brand-50 to-white p-4">
+        <p class="text-sm text-brand-600">核心经营概览</p>
+        <div class="mt-3 flex items-end justify-between">
+          <div>
+            <p id="sideSales" class="text-3xl font-semibold text-slate-900">¥0</p>
+            <p id="sideTarget" class="mt-1 text-xs text-slate-500">目标完成率 0%</p>
+          </div>
+          <span class="rounded-full border border-brand-100 bg-white px-3 py-1 text-xs font-medium text-brand-600">实时</span>
+        </div>
+      </div>
+
+      <nav class="space-y-2">
+        <a href="dashboard.html" class="flex cursor-pointer items-center gap-3 rounded-xl border border-brand-100 bg-brand-500 px-4 py-3 text-sm font-semibold text-white shadow-panel transition-colors duration-200">
+          <svg class="h-5 w-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M4 19h16M7 16V9m5 7V5m5 11v-6" /></svg>
+          数据仪表盘
+        </a>
+        <a href="crm-leads.html" class="flex cursor-pointer items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-slate-700 transition-colors duration-200 hover:bg-brand-50 hover:text-brand-700">
+          <svg class="h-5 w-5 text-brand-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M4 7h16M4 12h10M4 17h7" /></svg>
+          线索管理
+        </a>
+        <a href="product-management.html" class="flex cursor-pointer items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-slate-700 transition-colors duration-200 hover:bg-brand-50 hover:text-brand-700">
+          <svg class="h-5 w-5 text-brand-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M4 7.5h16M6 4h12a2 2 0 0 1 2 2v12.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 18.5V6a2 2 0 0 1 2-2Zm1 7h4m-4 4h7" /></svg>
+          商品管理
+        </a>
+        <a href="order-management.html" class="flex cursor-pointer items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-slate-700 transition-colors duration-200 hover:bg-brand-50 hover:text-brand-700">
+          <svg class="h-5 w-5 text-brand-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M5 6.5h14M7 4h10a2 2 0 0 1 2 2v11.5A1.5 1.5 0 0 1 17.5 19h-11A1.5 1.5 0 0 1 5 17.5V6a2 2 0 0 1 2-2Zm1 6h8m-8 4h5" /></svg>
+          订单管理
+        </a>
+        <a href="role-management.html" class="flex cursor-pointer items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-slate-700 transition-colors duration-200 hover:bg-brand-50 hover:text-brand-700">
+          <svg class="h-5 w-5 text-brand-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M7 8h10M7 12h10M7 16h6M5 4h14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Z" /></svg>
+          角色与权限管理
+        </a>
+        <a href="customer-management.html" class="flex cursor-pointer items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-slate-700 transition-colors duration-200 hover:bg-brand-50 hover:text-brand-700">
+          <svg class="h-5 w-5 text-brand-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M6 7h12M6 12h12M6 17h7M5 4h14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Zm2 0v16" /></svg>
+          账号管理
+        </a>
+      </nav>
+
+      <div class="mt-10 rounded-2xl border border-slate-200 bg-white p-4 shadow-panel">
+        <p class="text-sm font-medium text-slate-900">经营看板提醒</p>
+        <p class="mt-2 text-sm leading-6 text-slate-500">建议优先关注订单转化和高价值线索来源，及时调整销售资源投放。</p>
+      </div>
+    </aside>
+
+    <main class="flex-1 p-6 lg:p-7">
+      <div class="mx-auto max-w-7xl space-y-6">
+        <header class="glass overflow-hidden rounded-2xl p-6 shadow-soft">
+          <div class="flex flex-col gap-5">
+            <div>
+              <p class="text-sm font-medium text-brand-600">数据仪表盘</p>
+              <h2 class="mt-2 text-3xl font-semibold tracking-tight text-slate-900">统一查看销售、线索、订单与人员业绩统计</h2>
+              <p class="mt-3 max-w-3xl text-sm leading-6 text-slate-600">趋势、排行与漏斗图统一升级为更接近正式 BI 看板的展示风格，并基于现有 JSON 数据自动聚合生成近 15 天统计。</p>
+            </div>
+          </div>
+        </header>
+
+        <section class="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
+          <div class="glass metric-card rounded-2xl p-5 shadow-soft">
+            <span class="metric-kicker">核心指标</span>
+            <p class="mt-4 text-sm text-slate-500">本月销售额</p>
+            <p id="metricSales" class="mt-3 text-3xl font-semibold text-brand-600">¥0</p>
+          </div>
+          <div class="glass metric-card rounded-2xl p-5 shadow-soft">
+            <span class="metric-kicker">线索经营</span>
+            <p class="mt-4 text-sm text-slate-500">本月客户线索数</p>
+            <p id="metricLeads" class="mt-3 text-3xl font-semibold text-slate-900">0</p>
+          </div>
+          <div class="glass metric-card rounded-2xl p-5 shadow-soft">
+            <span class="metric-kicker">订单转化</span>
+            <p class="mt-4 text-sm text-slate-500">本月订单数</p>
+            <p id="metricOrders" class="mt-3 text-3xl font-semibold text-slate-900">0</p>
+          </div>
+          <div class="glass metric-card rounded-2xl p-5 shadow-soft">
+            <span class="metric-kicker">目标达成</span>
+            <p class="mt-4 text-sm text-slate-500">本月业绩完成情况</p>
+            <p id="metricTarget" class="mt-3 text-3xl font-semibold text-slate-900">0%</p>
+            <p class="mt-2 text-sm text-slate-400">目标 10w</p>
+          </div>
+        </section>
+
+        <section class="grid grid-cols-1 gap-6 xl:grid-cols-[1.5fr_1fr]">
+          <section class="glass rounded-2xl p-6 shadow-soft">
+            <div class="flex flex-col gap-3 border-b border-slate-200 pb-5 lg:flex-row lg:items-center lg:justify-between">
+              <h3 class="bank-divider text-lg font-semibold text-slate-900">业绩趋势图</h3>
+              <div class="flex flex-wrap gap-2">
+                <button data-trend="sales" class="trend-tab rounded-xl bg-brand-500 px-4 py-2 text-sm font-medium text-white">销售额</button>
+                <button data-trend="leads" class="trend-tab rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600">客户线索数</button>
+                <button data-trend="orders" class="trend-tab rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600">订单数</button>
+              </div>
+            </div>
+            <div class="mt-5 space-y-4">
+              <p id="trendTitle" class="text-sm text-slate-500">销售额折线图，按日展示近 15 天数据。</p>
+              <div id="trendSummary" class="grid grid-cols-1 gap-3 md:grid-cols-3"></div>
+              <div class="chart-panel bi-surface rounded-2xl p-4">
+                <div class="mb-3 flex items-center justify-between text-sm text-slate-500">
+                  <span>近 15 天</span>
+                  <span id="trendPeak">峰值 0</span>
+                </div>
+                <svg id="trendSvg" viewBox="0 0 760 280" class="h-[260px] w-full"></svg>
+              </div>
+            </div>
+          </section>
+
+          <section class="glass rounded-2xl p-6 shadow-soft">
+            <div class="flex flex-col gap-3 border-b border-slate-200 pb-5">
+              <h3 class="bank-divider text-lg font-semibold text-slate-900">客户转化漏斗</h3>
+            </div>
+            <div class="mt-5">
+              <div class="chart-panel bi-surface rounded-2xl p-4">
+                <svg id="funnelChart" viewBox="0 0 480 360" class="h-[320px] w-full"></svg>
+              </div>
+              <div id="funnelLegend" class="mt-4 grid grid-cols-1 gap-3 md:grid-cols-2"></div>
+            </div>
+          </section>
+        </section>
+
+        <section class="grid grid-cols-1 gap-6 xl:grid-cols-2">
+          <section class="glass rounded-2xl p-6 shadow-soft">
+            <div class="flex flex-col gap-3 border-b border-slate-200 pb-5">
+              <h3 class="bank-divider text-lg font-semibold text-slate-900">线索来源排行榜</h3>
+            </div>
+            <div id="sourceRanking" class="mt-5 space-y-4"></div>
+          </section>
+
+          <section class="glass rounded-2xl p-6 shadow-soft">
+            <div class="flex flex-col gap-3 border-b border-slate-200 pb-5">
+              <h3 class="bank-divider text-lg font-semibold text-slate-900">售卖商品统计</h3>
+            </div>
+            <div class="mt-5 flex flex-col gap-6 lg:flex-row lg:items-center">
+              <div id="pieChart" class="mx-auto h-56 w-56 rounded-full"></div>
+              <div id="pieLegend" class="flex-1 space-y-3"></div>
+            </div>
+          </section>
+        </section>
+
+        <section class="grid grid-cols-1 gap-6 xl:grid-cols-2">
+          <section class="glass rounded-2xl p-6 shadow-soft">
+            <div class="flex flex-col gap-3 border-b border-slate-200 pb-5">
+              <h3 class="bank-divider text-lg font-semibold text-slate-900">销售业绩统计 Top10</h3>
+            </div>
+            <div id="salesRanking" class="mt-5 space-y-4"></div>
+          </section>
+          <section class="glass rounded-2xl p-6 shadow-soft">
+            <div class="flex flex-col gap-3 border-b border-slate-200 pb-5">
+              <h3 class="bank-divider text-lg font-semibold text-slate-900">销售转化率统计 Top10</h3>
+            </div>
+            <div id="conversionRanking" class="mt-5 space-y-4"></div>
+          </section>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    window.CRMAuth.requireAuth();
+    window.CRMAuth.applyNavigationPermissions();
+
+    const embeddedData = {
+      leads: [
+        { id: "LS20260618001", createdAt: "2026-06-18 09:12", name: "张晨曦", phone: "138****8271", priority: "高", source: "官网表单", owner: "李思远", followUps: [{ time: "2026-06-18 10:00", note: "已电话首联，客户明确有近期采购计划，预约明日上午演示。", by: "李思远" }] },
+        { id: "LS20260618002", createdAt: "2026-06-18 10:08", name: "王雅宁", phone: "139****5520", priority: "中", source: "抖音投放", owner: "周可", followUps: [{ time: "2026-06-18 11:20", note: "已添加微信，客户正在内部评估需求，约定后天下午再联系。", by: "周可" }] },
+        { id: "LS20260618003", createdAt: "2026-06-18 10:44", name: "陈柏舟", phone: "186****4421", priority: "低", source: "渠道转介绍", owner: "赵嘉琪", followUps: [] },
+        { id: "LS20260618004", createdAt: "2026-06-18 11:16", name: "刘思彤", phone: "137****1638", priority: "高", source: "微信公众号", owner: "孙明哲", followUps: [{ time: "2026-06-18 12:10", note: "客户询问套餐价格与实施周期，已发送产品资料包。", by: "孙明哲" }] },
+        { id: "LS20260618005", createdAt: "2026-06-18 12:03", name: "许景禾", phone: "158****9044", priority: "中", source: "SEM 广告", owner: "何嘉乐", followUps: [] }
+      ],
+      orders: [
+        { id: "DD20260619001", createdAt: "2026-06-19 10:12", customerName: "张晨曦", customerPhone: "138****8271", productCode: "PRD-1001", productName: "企业收款云终端", amount: 2680 },
+        { id: "DD20260619002", createdAt: "2026-06-19 10:46", customerName: "王雅宁", customerPhone: "139****5520", productCode: "PRD-1002", productName: "智慧对账服务包", amount: 1299 },
+        { id: "DD20260619003", createdAt: "2026-06-19 11:20", customerName: "陈柏舟", customerPhone: "186****4421", productCode: "PRD-1004", productName: "商户经营分析看板", amount: 1999 },
+        { id: "DD20260619004", createdAt: "2026-06-19 14:05", customerName: "刘思彤", customerPhone: "137****1638", productCode: "PRD-1003", productName: "企业资金监管组件", amount: 4580 },
+        { id: "DD20260619005", createdAt: "2026-06-19 15:18", customerName: "许景禾", customerPhone: "158****9044", productCode: "PRD-1006", productName: "企业客户营销引擎", amount: 3250 }
+      ],
+      products: [
+        { id: "SP20260618001", createdAt: "2026-06-18 09:08", code: "PRD-1001", name: "企业收款云终端", price: 2680 },
+        { id: "SP20260618002", createdAt: "2026-06-18 10:16", code: "PRD-1002", name: "智慧对账服务包", price: 1299 },
+        { id: "SP20260618003", createdAt: "2026-06-18 11:02", code: "PRD-1003", name: "企业资金监管组件", price: 4580 },
+        { id: "SP20260618004", createdAt: "2026-06-18 13:24", code: "PRD-1004", name: "商户经营分析看板", price: 1999 },
+        { id: "SP20260618005", createdAt: "2026-06-18 15:10", code: "PRD-1005", name: "门店会员营销工具", price: 880 },
+        { id: "SP20260618006", createdAt: "2026-06-19 09:45", code: "PRD-1006", name: "企业客户营销引擎", price: 3250 }
+      ]
+    };
+
+    const targetMonthlySales = 100000;
+    const trendPalette = {
+      sales: { color: "#3f7cf7", unit: "元", title: "销售额趋势，按日统计近 15 天订单金额。" },
+      leads: { color: "#58b67e", unit: "条", title: "客户线索趋势，按日统计近 15 天新增线索。" },
+      orders: { color: "#f59e0b", unit: "笔", title: "订单趋势，按日统计近 15 天新增订单。" }
+    };
+
+    let leads = [...embeddedData.leads];
+    let orders = [...embeddedData.orders];
+    let products = [...embeddedData.products];
+    let trendMap = {};
+    let currentTrend = "sales";
+    let referenceDate = new Date();
+
+    const metricSales = document.getElementById("metricSales");
+    const metricLeads = document.getElementById("metricLeads");
+    const metricOrders = document.getElementById("metricOrders");
+    const metricTarget = document.getElementById("metricTarget");
+    const sideSales = document.getElementById("sideSales");
+    const sideTarget = document.getElementById("sideTarget");
+    const trendTitle = document.getElementById("trendTitle");
+    const trendPeak = document.getElementById("trendPeak");
+    const trendSummary = document.getElementById("trendSummary");
+    const trendSvg = document.getElementById("trendSvg");
+    const funnelChart = document.getElementById("funnelChart");
+    const funnelLegend = document.getElementById("funnelLegend");
+    const sourceRanking = document.getElementById("sourceRanking");
+    const pieChart = document.getElementById("pieChart");
+    const pieLegend = document.getElementById("pieLegend");
+    const salesRankingEl = document.getElementById("salesRanking");
+    const conversionRankingEl = document.getElementById("conversionRanking");
+    const trendTabs = document.querySelectorAll(".trend-tab");
+
+    function formatCurrency(value) {
+      return `¥${Number(value || 0).toLocaleString("zh-CN")}`;
+    }
+
+    function formatCompactNumber(value) {
+      return Number(value || 0).toLocaleString("zh-CN", { maximumFractionDigits: 1 });
+    }
+
+    function formatByUnit(value, unit) {
+      return unit === "元" ? formatCurrency(value) : `${formatCompactNumber(value)}${unit}`;
+    }
+
+    function parseDateTime(value) {
+      if (!value) return null;
+      const date = new Date(String(value).replace(" ", "T"));
+      return Number.isNaN(date.getTime()) ? null : date;
+    }
+
+    function addDays(date, offset) {
+      const next = new Date(date);
+      next.setDate(next.getDate() + offset);
+      return next;
+    }
+
+    function formatDateKey(date) {
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const day = String(date.getDate()).padStart(2, "0");
+      return `${year}-${month}-${day}`;
+    }
+
+    function formatDayLabel(date) {
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const day = String(date.getDate()).padStart(2, "0");
+      return `${month}/${day}`;
+    }
+
+    function isSameMonth(date, refDate) {
+      return date && refDate && date.getFullYear() === refDate.getFullYear() && date.getMonth() === refDate.getMonth();
+    }
+
+    function getReferenceDate() {
+      const dates = [...leads, ...orders, ...products].map((item) => parseDateTime(item.createdAt)).filter(Boolean);
+      if (!dates.length) return new Date();
+      return new Date(Math.max(...dates.map((date) => date.getTime())));
+    }
+
+    function toLookupMap(items, dateAccessor, valueAccessor = () => 1) {
+      const lookup = new Map();
+      items.forEach((item) => {
+        const date = parseDateTime(dateAccessor(item));
+        if (!date) return;
+        const key = formatDateKey(date);
+        lookup.set(key, (lookup.get(key) || 0) + valueAccessor(item));
+      });
+      return lookup;
+    }
+
+    async function loadJsonData() {
+      if (window.location.protocol === "file:") {
+        return embeddedData;
+      }
+
+      try {
+        const [leadsRes, ordersRes, productsRes] = await Promise.all([
+          fetch("./data/leads.json", { cache: "no-store" }),
+          fetch("./data/orders.json", { cache: "no-store" }),
+          fetch("./data/products.json", { cache: "no-store" })
+        ]);
+
+        if (!leadsRes.ok || !ordersRes.ok || !productsRes.ok) {
+          throw new Error("JSON 文件读取失败");
+        }
+
+        const [nextLeads, nextOrders, nextProducts] = await Promise.all([
+          leadsRes.json(),
+          ordersRes.json(),
+          productsRes.json()
+        ]);
+
+        return { leads: nextLeads, orders: nextOrders, products: nextProducts };
+      } catch (error) {
+        console.warn("读取 JSON 失败，已回退到内置数据。", error);
+        return embeddedData;
+      }
+    }
+
+    function buildTrendSeries(days = 15) {
+      const endDate = getReferenceDate();
+      const startDate = addDays(endDate, -(days - 1));
+      const salesLookup = toLookupMap(orders, (item) => item.createdAt, (item) => Number(item.amount) || 0);
+      const leadsLookup = toLookupMap(leads, (item) => item.createdAt);
+      const ordersLookup = toLookupMap(orders, (item) => item.createdAt);
+
+      const makeSeries = (lookup) => Array.from({ length: days }, (_, index) => {
+        const date = addDays(startDate, index);
+        const key = formatDateKey(date);
+        return { label: formatDayLabel(date), value: lookup.get(key) || 0 };
+      });
+
+      referenceDate = endDate;
+      trendMap = {
+        sales: { ...trendPalette.sales, data: makeSeries(salesLookup) },
+        leads: { ...trendPalette.leads, data: makeSeries(leadsLookup) },
+        orders: { ...trendPalette.orders, data: makeSeries(ordersLookup) }
+      };
+    }
+
+    function renderMetrics() {
+      const monthSales = orders.reduce((sum, order) => {
+        const date = parseDateTime(order.createdAt);
+        return isSameMonth(date, referenceDate) ? sum + (Number(order.amount) || 0) : sum;
+      }, 0);
+      const monthLeads = leads.filter((lead) => isSameMonth(parseDateTime(lead.createdAt), referenceDate)).length;
+      const monthOrders = orders.filter((order) => isSameMonth(parseDateTime(order.createdAt), referenceDate)).length;
+      const rate = Math.min(100, (monthSales / targetMonthlySales) * 100);
+
+      metricSales.textContent = formatCurrency(monthSales);
+      metricLeads.textContent = String(monthLeads);
+      metricOrders.textContent = String(monthOrders);
+      metricTarget.textContent = `${rate.toFixed(1)}%`;
+      sideSales.textContent = formatCurrency(monthSales);
+      sideTarget.textContent = `目标完成率 ${rate.toFixed(1)}%`;
+    }
+
+    function renderTrend() {
+      const config = trendMap[currentTrend];
+      const values = config.data.map((item) => item.value);
+      const max = Math.max(...values, 1);
+      const total = values.reduce((sum, value) => sum + value, 0);
+      const latest = values[values.length - 1] || 0;
+      const previous = values[values.length - 2] || 0;
+      const avg = total / Math.max(values.length, 1);
+      const changeRate = previous === 0 ? (latest > 0 ? 100 : 0) : ((latest - previous) / previous) * 100;
+      const width = 760;
+      const height = 280;
+      const paddingX = 52;
+      const paddingY = 24;
+      const chartHeight = height - paddingY * 2;
+      const chartWidth = width - paddingX * 2;
+      const stepX = chartWidth / Math.max(config.data.length - 1, 1);
+      const points = config.data.map((item, index) => {
+        const x = paddingX + stepX * index;
+        const y = height - paddingY - (item.value / max) * chartHeight;
+        return { ...item, x, y };
+      });
+      const path = points.map((point, index) => `${index === 0 ? "M" : "L"} ${point.x} ${point.y}`).join(" ");
+      const areaPath = `${path} L ${points[points.length - 1].x} ${height - paddingY} L ${points[0].x} ${height - paddingY} Z`;
+      const yTicks = Array.from({ length: 5 }, (_, index) => {
+        const value = (max / 4) * (4 - index);
+        const y = paddingY + (chartHeight / 4) * index;
+        return { value, y };
+      });
+
+      trendTitle.textContent = config.title;
+      trendPeak.textContent = `峰值 ${formatByUnit(max, config.unit)}`;
+      trendSummary.innerHTML = [
+        { label: "近 15 天累计", value: formatByUnit(total, config.unit) },
+        { label: "日均", value: formatByUnit(avg, config.unit) },
+        { label: "最新值", value: `${formatByUnit(latest, config.unit)} · ${changeRate >= 0 ? "+" : ""}${changeRate.toFixed(1)}%` }
+      ].map((item) => `
+        <div class="chart-summary-card rounded-2xl px-4 py-3">
+          <p class="text-xs font-medium uppercase tracking-[0.2em] text-slate-400">${item.label}</p>
+          <p class="mt-2 text-lg font-semibold text-slate-900">${item.value}</p>
+        </div>
+      `).join("");
+
+      trendSvg.innerHTML = `
+        <defs>
+          <linearGradient id="trendAreaGradient" x1="0" x2="0" y1="0" y2="1">
+            <stop offset="0%" stop-color="${config.color}" stop-opacity="0.32"></stop>
+            <stop offset="100%" stop-color="${config.color}" stop-opacity="0.04"></stop>
+          </linearGradient>
+          <filter id="trendShadow" x="-20%" y="-20%" width="140%" height="140%">
+            <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="${config.color}" flood-opacity="0.15"></feDropShadow>
+          </filter>
+        </defs>
+        ${yTicks.map((tick) => `
+          <line x1="${paddingX}" x2="${width - paddingX}" y1="${tick.y}" y2="${tick.y}" stroke="#d9e6df" stroke-dasharray="4 6" />
+          <text x="${paddingX - 10}" y="${tick.y + 4}" text-anchor="end" font-size="11" fill="#94a3b8">${config.unit === "元" ? Math.round(tick.value).toLocaleString("zh-CN") : Math.round(tick.value)}</text>
+        `).join("")}
+        <path d="${areaPath}" fill="url(#trendAreaGradient)"></path>
+        <path d="${path}" fill="none" stroke="${config.color}" stroke-width="4" stroke-linejoin="round" stroke-linecap="round" filter="url(#trendShadow)"></path>
+        ${points.map((point, index) => `
+          ${index % 2 === 0 || index === points.length - 1 ? `<text x="${point.x}" y="${height - 6}" text-anchor="middle" font-size="10" fill="#94a3b8">${point.label}</text>` : ""}
+          <circle cx="${point.x}" cy="${point.y}" r="${index === points.length - 1 ? 6 : 4}" fill="${config.color}" stroke="#ffffff" stroke-width="3"></circle>
+        `).join("")}
+        <circle cx="${points[points.length - 1].x}" cy="${points[points.length - 1].y}" r="11" fill="${config.color}" opacity="0.12"></circle>
+      `;
+
+      trendTabs.forEach((button) => {
+        const isActive = button.dataset.trend === currentTrend;
+        button.className = isActive
+          ? "trend-tab rounded-xl bg-brand-500 px-4 py-2 text-sm font-medium text-white"
+          : "trend-tab rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600";
+      });
+    }
+
+    function matchLeadForOrder(order) {
+      return leads.find((lead) => lead.phone === order.customerPhone || lead.name === order.customerName);
+    }
+
+    function getFunnelData() {
+      const totalLeads = leads.length;
+      const followed = leads.filter((lead) => Array.isArray(lead.followUps) && lead.followUps.length > 0).length;
+      const intentPattern = /演示|价格|资料|方案|报价|采购/;
+      const highIntent = leads.filter((lead) => lead.priority === "高" || (lead.followUps || []).some((item) => intentPattern.test(item.note))).length;
+      const proposal = leads.filter((lead) => (lead.followUps || []).some((item) => intentPattern.test(item.note))).length;
+      const closedRaw = orders.filter((order) => matchLeadForOrder(order)).length;
+      const rawStages = [
+        { label: "线索获取", value: totalLeads, color: "#4a77d4" },
+        { label: "有效跟进", value: followed, color: "#93acef" },
+        { label: "高意向", value: highIntent, color: "#ffe05d" },
+        { label: "方案推荐", value: proposal, color: "#f39a2f" },
+        { label: "成交转化", value: closedRaw, color: "#f6b25f" }
+      ];
+      const totalSales = orders.reduce((sum, order) => sum + (Number(order.amount) || 0), 0);
+
+      return rawStages.reduce((result, stage, index) => {
+        const previousValue = index === 0 ? stage.value : result[index - 1].value;
+        const cappedValue = index === 0 ? stage.value : Math.min(previousValue, stage.value);
+        result.push({
+          ...stage,
+          value: cappedValue,
+          amount: totalLeads ? Math.round(totalSales * (cappedValue / totalLeads)) : 0,
+          rate: index === 0 || previousValue === 0 ? 100 : (cappedValue / previousValue) * 100
+        });
+        return result;
+      }, []);
+    }
+
+    function renderFunnel() {
+      const data = getFunnelData();
+      const width = 480;
+      const rowHeight = 54;
+      const gap = 8;
+      const topWidth = 410;
+      const bottomWidth = 120;
+      const step = (topWidth - bottomWidth) / Math.max(data.length - 1, 1);
+
+      funnelChart.innerHTML = data.map((item, index) => {
+        const segmentTopWidth = topWidth - step * index;
+        const segmentBottomWidth = index === data.length - 1 ? 78 : topWidth - step * (index + 1);
+        const topX = (width - segmentTopWidth) / 2;
+        const bottomX = (width - segmentBottomWidth) / 2;
+        const y = 14 + index * (rowHeight + gap);
+        const points = [
+          `${topX},${y}`,
+          `${topX + segmentTopWidth},${y}`,
+          `${bottomX + segmentBottomWidth},${y + rowHeight}`,
+          `${bottomX},${y + rowHeight}`
+        ].join(" ");
+        return `
+          <polygon points="${points}" fill="${item.color}" stroke="rgba(255,255,255,0.82)" stroke-width="2"></polygon>
+          <text x="${width / 2}" y="${y + 22}" text-anchor="middle" font-size="14" font-weight="700" fill="#20304d">${item.label}</text>
+          <text x="${width / 2}" y="${y + 40}" text-anchor="middle" font-size="12" fill="#20304d">
+            客户数 ${item.value} · 累计金额 ${formatCurrency(item.amount)} · 环比 ${item.rate.toFixed(0)}%
+          </text>
+        `;
+      }).join("");
+
+      funnelLegend.innerHTML = data.map((item, index) => `
+        <div class="rank-card rounded-2xl px-4 py-3">
+          <div class="flex items-center justify-between gap-3">
+            <div class="flex items-center gap-3">
+              <span class="inline-block h-3.5 w-3.5 rounded-full" style="background:${item.color}"></span>
+              <div>
+                <p class="text-sm font-semibold text-slate-800">${String(index + 1).padStart(2, "0")} · ${item.label}</p>
+                <p class="mt-1 text-xs text-slate-500">客户数 ${item.value}，累计金额 ${formatCurrency(item.amount)}</p>
+              </div>
+            </div>
+            <span class="text-sm font-medium text-slate-600">${item.rate.toFixed(0)}%</span>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    function renderRankList(target, items, formatter, percentFormatter) {
+      const max = Math.max(...items.map((item) => item.value), 1);
+      target.innerHTML = items.map((item, index) => {
+        const percent = (item.value / max) * 100;
+        return `
+          <div class="rank-card rounded-2xl p-4">
+            <div class="flex items-start justify-between gap-3">
+              <div class="flex items-center gap-3">
+                <span class="rank-badge ${index < 3 ? "top" : ""}">${index + 1}</span>
+                <div>
+                  <p class="text-sm font-semibold text-slate-800">${item.name || item.label}</p>
+                  <p class="mt-1 text-xs text-slate-500">${percentFormatter ? percentFormatter(item) : "业务贡献"}</p>
+                </div>
+              </div>
+              <span class="text-sm font-semibold text-slate-700">${formatter(item.value)}</span>
+            </div>
+            <div class="mt-3 h-2.5 overflow-hidden rounded-full bg-slate-100">
+              <div class="h-full rounded-full bg-gradient-to-r from-[#3f7cf7] via-brand-500 to-brand-600" style="width:${percent}%"></div>
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function renderSourceRanking() {
+      const map = new Map();
+      leads.forEach((lead) => map.set(lead.source, (map.get(lead.source) || 0) + 1));
+      const total = leads.length || 1;
+      const items = [...map.entries()].map(([label, value]) => ({ label, value })).sort((a, b) => b.value - a.value);
+      renderRankList(sourceRanking, items, (value) => `${value} 条`, (item) => `占比 ${((item.value / total) * 100).toFixed(1)}%`);
+    }
+
+    function renderPie() {
+      const palette = ["#3f7cf7", "#58b67e", "#f59e0b", "#ef4444", "#8b5cf6", "#0ea5e9"];
+      const map = new Map();
+      orders.forEach((order) => map.set(order.productName, (map.get(order.productName) || 0) + (Number(order.amount) || 0)));
+      const items = [...map.entries()].map(([label, value]) => ({ label, value })).sort((a, b) => b.value - a.value);
+      const total = items.reduce((sum, item) => sum + item.value, 0) || 1;
+      let cumulative = 0;
+      const segments = items.map((item, index) => {
+        const start = (cumulative / total) * 100;
+        cumulative += item.value;
+        const end = (cumulative / total) * 100;
+        return { ...item, color: palette[index % palette.length], start, end };
+      });
+
+      pieChart.className = "mx-auto h-56 w-56 rounded-full";
+      pieChart.style.background = `conic-gradient(${segments.map((segment) => `${segment.color} ${segment.start}% ${segment.end}%`).join(", ")})`;
+      pieChart.innerHTML = `
+        <div class="flex h-full w-full items-center justify-center">
+          <div class="flex h-32 w-32 flex-col items-center justify-center rounded-full border border-slate-100 bg-white text-center shadow-panel">
+            <p class="text-xs uppercase tracking-[0.2em] text-slate-400">GMV</p>
+            <p class="mt-1 text-lg font-semibold text-slate-900">${formatCurrency(total)}</p>
+          </div>
+        </div>
+      `;
+      pieLegend.innerHTML = segments.map((segment) => `
+        <div class="rank-card rounded-2xl px-4 py-3">
+          <div class="flex items-center justify-between gap-3 text-sm">
+            <div class="flex items-center gap-3">
+              <span class="inline-block h-3 w-3 rounded-full" style="background:${segment.color}"></span>
+              <span class="font-medium text-slate-700">${segment.label}</span>
+            </div>
+            <span class="text-slate-500">${formatCurrency(segment.value)} / ${((segment.value / total) * 100).toFixed(1)}%</span>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    function getSalesRanking() {
+      const map = new Map();
+      orders.forEach((order) => {
+        const lead = matchLeadForOrder(order);
+        const owner = lead ? lead.owner : "未分配";
+        map.set(owner, (map.get(owner) || 0) + (Number(order.amount) || 0));
+      });
+      return [...map.entries()].map(([name, value]) => ({ name, value })).sort((a, b) => b.value - a.value).slice(0, 10);
+    }
+
+    function getConversionRanking() {
+      const ownerStats = new Map();
+      leads.forEach((lead) => {
+        const stat = ownerStats.get(lead.owner) || { name: lead.owner, leadCount: 0, orderCount: 0, value: 0 };
+        stat.leadCount += 1;
+        ownerStats.set(lead.owner, stat);
+      });
+      orders.forEach((order) => {
+        const lead = matchLeadForOrder(order);
+        if (!lead) return;
+        const stat = ownerStats.get(lead.owner) || { name: lead.owner, leadCount: 0, orderCount: 0, value: 0 };
+        stat.orderCount += 1;
+        ownerStats.set(lead.owner, stat);
+      });
+      return [...ownerStats.values()].map((item) => ({
+        name: item.name,
+        value: item.leadCount ? Number(((item.orderCount / item.leadCount) * 100).toFixed(1)) : 0,
+        leadCount: item.leadCount,
+        orderCount: item.orderCount
+      })).sort((a, b) => b.value - a.value).slice(0, 10);
+    }
+
+    async function initDashboard() {
+      const data = await loadJsonData();
+      leads = Array.isArray(data.leads) ? data.leads : embeddedData.leads;
+      orders = Array.isArray(data.orders) ? data.orders : embeddedData.orders;
+      products = Array.isArray(data.products) ? data.products : embeddedData.products;
+
+      buildTrendSeries(15);
+      renderMetrics();
+      renderTrend();
+      renderFunnel();
+      renderSourceRanking();
+      renderPie();
+      renderRankList(salesRankingEl, getSalesRanking(), (value) => formatCurrency(value), (item) => `销售贡献 ${formatCurrency(item.value)}`);
+      renderRankList(conversionRankingEl, getConversionRanking(), (value) => `${value}%`, (item) => `线索 ${item.leadCount} / 成交 ${item.orderCount}`);
+    }
+
+    trendTabs.forEach((button) => {
+      button.addEventListener("click", () => {
+        currentTrend = button.dataset.trend;
+        renderTrend();
+      });
+    });
+
+    initDashboard();
+  </script>
+</body>
+</html>
