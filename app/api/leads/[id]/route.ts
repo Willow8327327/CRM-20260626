@@ -4,11 +4,11 @@ import { updateLead } from "@/lib/lead-store";
 import type { LeadInput } from "@/lib/types";
 
 interface RouteContext {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 
 export async function PATCH(request: Request, context: RouteContext) {
-  const { id } = context.params;
+  const { id } = await context.params;
   const body = (await request.json()) as Partial<LeadInput>;
   const lead = await updateLead(id, body);
 

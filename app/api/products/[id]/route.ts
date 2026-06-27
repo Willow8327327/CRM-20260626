@@ -4,11 +4,11 @@ import { deleteProduct, updateProduct } from "@/lib/product-store";
 import type { ProductInput } from "@/lib/types";
 
 interface RouteContext {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 
 export async function PATCH(request: Request, context: RouteContext) {
-  const { id } = context.params;
+  const { id } = await context.params;
   const body = (await request.json()) as Partial<ProductInput>;
 
   if (body.price !== undefined && (typeof body.price !== "number" || body.price <= 0)) {
@@ -25,7 +25,7 @@ export async function PATCH(request: Request, context: RouteContext) {
 }
 
 export async function DELETE(_request: Request, context: RouteContext) {
-  const { id } = context.params;
+  const { id } = await context.params;
   const deleted = await deleteProduct(id);
 
   if (!deleted) {

@@ -4,11 +4,11 @@ import { deleteOrder, updateOrder } from "@/lib/order-store";
 import type { OrderInput } from "@/lib/types";
 
 interface RouteContext {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 
 export async function PATCH(request: Request, context: RouteContext) {
-  const { id } = context.params;
+  const { id } = await context.params;
   const body = (await request.json()) as Partial<OrderInput>;
 
   if (!body.customerPhone && !body.productCode) {
@@ -32,7 +32,7 @@ export async function PATCH(request: Request, context: RouteContext) {
 }
 
 export async function DELETE(_request: Request, context: RouteContext) {
-  const { id } = context.params;
+  const { id } = await context.params;
   const deleted = await deleteOrder(id);
 
   if (!deleted) {

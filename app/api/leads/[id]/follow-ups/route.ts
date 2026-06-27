@@ -5,11 +5,11 @@ import { formatDateTime } from "@/lib/date";
 import type { FollowUp } from "@/lib/types";
 
 interface RouteContext {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 
 export async function POST(request: Request, context: RouteContext) {
-  const { id } = context.params;
+  const { id } = await context.params;
   const body = (await request.json()) as Pick<FollowUp, "note" | "by">;
 
   if (!body.note || !body.by) {
